@@ -104,10 +104,10 @@ To compile Safe-C programs
         mk p
 
 
-  3) Now you type c <enter>
+  3) Now you type c (+ Enter)
      it compiles p.c into p.exe
 
-  4) type p <enter>
+  4) type p (+ Enter)
      you should see "Hello World"
 
     If you get a file not found error, it means Windows Defender quarantained your program.
