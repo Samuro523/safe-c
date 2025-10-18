@@ -1,0 +1,129 @@
+<html>
+<head>
+<title>The Safe-C Programming Language</title>
+<meta http-equiv="expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="keywords" content="Safe-C,programming language,C,safe,reliable,modern,secure,fast,array check,index check,pointer check,tombstone,windows,compiler">
+<meta name="description" content="The Safe-C Programming Language is a modern version of C whose objectives are speed and memory safety (by checking array indexes, pointers, etc ..)">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body { font: bold 1.0em Arial; color: #000080; }
+pre { font: bold 1.0em/100% 'Courier New'; color: black; }
+h1 { color: #A00000; }
+h2 { color: #408000; }
+h3 { color: #802000; }
+@media (max-width: 599px) { img {max-width: 100%; width: 100%; }}
+@media (min-width: 600px) {}
+</style>
+
+<body>
+
+<H1><center>The Safe-C Programming Language</center></H1><br>
+
+<p>The Safe-C programming language was created in 2011.
+It is the result of an effort to modernize the C language so that it can be used to write reliable software.
+
+<p>In particular, array indices and pointers are checked to ensure that they cannot access memory outside the language's rules.
+
+<p>Safe-C is very similar to C (95% of the syntax is identical), so a C programmer will have no difficulty switching to Safe-C.
+
+<p>Safe-C was used to develop the client and server software for the multi-user 3D virtual world
+ <a href=https://planet-samuro.com>https://planet-samuro.com</a>
+
+<hr>
+<br>
+The following tutorials are available :<br>
+<br>
+
+<ul>
+
+<li><a href="Safe_C_Summary.html">Safe_C_Summary.html</a> (for developers who already know C very well)<br><br>
+
+<li><a href="learning_safe_c.html">Programming in Safe-C</a><br><br>
+
+<li>The <a href="Safe_C_Reference_Manual.v1.42.txt">Safe_C_Reference_Manual.v1.42.txt</a> 
+is a normative description of the Safe-C language for people who wish to develop a Safe-C compiler.
+
+</ul>
+
+<hr><br>
+
+<p>The standard Safe-C library includes the following components :</p>
+<table>
+<tr><td><a href="aes.txt">aes</a><td>AES cryption
+<tr><td><a href="arithm.txt">arithm</a><td>simple arithmetic (abs, min, max)
+<tr><td><a href="base64.txt">base64</a><td>base64 encoding
+<tr><td><a href="bintree.txt">bintree</a><td>balanced binary trees (AVL)
+<tr><td><a href="calendar.txt">calendar</a><td>calender
+<tr><td><a href="console.txt">console</a><td>writing/reading on the dos console box
+<tr><td><a href="crc.txt">crc</a><td>md5, sha2, adler and crc checksums
+<tr><td><a href="db.txt">db</a><td>database (insert/delete/update/retrieve, transations on .db files - <a href="db-manual.txt">documentation</a>)
+<tr><td><a href="des.txt">des</a><td>DES cryption
+<tr><td><a href="draw.txt">draw</a><td>draw in a memory buffer (line, circle, text, image)
+<tr><td><a href="draw3d.txt">draw3d</a><td>layer for using DirectX 10 & 11 (Windows) or OpenGL 3.0 (Android)
+<tr><td><a href="exception.txt">exception</a><td>exception handling
+<tr><td><a href="files.txt">files</a><td>text and binary files, directories, disk.
+<tr><td><a href="ftp.txt">ftp</a><td>file transfer protocol (ftp) - client and server
+<tr><td><a href="gui.txt">gui</a><td>graphic user interface (windows, listboxes, etc ..) with a main window using component directx
+<tr><td><a href="hash.txt">hash</a><td>hash table, dictionary (key to value)
+<tr><td><a href="http.txt">http</a><td>internet client and serveur (login, virtual html pages, ..)
+<tr><td><a href="image.txt">image</a><td>compression and decompression (jpg, gif, png, ..), image treatment
+<tr><td><a href="inifile.txt">inifile</a><td>reading of .ini files
+<tr><td><a href="integer.txt">integer</a><td>operations on large unsigned integers
+<tr><td><a href="linear_algebra.txt">linear_algebra</a><td>operations on vectors and matrices
+<tr><td><a href="math.txt">math</a><td>math functions (sin, cos, ..)
+<tr><td><a href="media.txt">media</a><td>multimedia for DirectX 11
+<tr><td><a href="memory.txt">memory</a><td>low-level memory allocation
+<tr><td><a href="netcard.txt">netcard</a><td>information about network cards (windows-specific)
+<tr><td><a href="odbc.txt">odbc</a><td>interface to sql databases using odbc 3.0
+<tr><td><a href="opus.txt">opus</a><td>audio codec (see <a href="http://www.opus-codec.org/">http://www.opus-codec.org/</a>)
+<tr><td><a href="pdf.txt">pdf</a><td>create PDF files
+<tr><td><a href="printer.txt">printer</a><td>printer
+<tr><td><a href="random.txt">random</a><td>generation of random numbers
+<tr><td><a href="registry.txt">registry</a><td>read/write a key from registry (windows-specific)
+<tr><td><a href="rsa.txt">rsa</a><td>asymmetric encryption
+<tr><td><a href="service.txt">service</a><td>Windows Services - background processes (windows-specific)
+<tr><td><a href="shortcut.txt">shortcut</a><td>program installation, create a shortcut on desktop
+<tr><td><a href="smtp.txt">smtp</a><td>sending e-mails using protocol smtp
+<tr><td><a href="sorting.txt">sorting</a><td>sorting of arrays (bubblesort, heapsort, quicksort)
+<tr><td><a href="sound.txt">sound</a><td>microphone and speaker
+<tr><td><a href="strings.txt">strings</a><td>characters and strings (strcpy, sprintf, ..)
+<tr><td><a href="system.txt">system</a><td>system information (PC name, memory, nb of CPUs)
+<tr><td><a href="tcpip.txt">tcpip</a><td>network connection by tcpip (ipv4 and ipv6)
+<tr><td><a href="text.txt">text</a><td>storage of a text composed of lines
+<tr><td><a href="thread.txt">thread</a><td>parallel threads, synchronisation, timers
+<tr><td><a href="tracing.txt">tracing</a><td>trace files
+<tr><td><a href="url.txt">url</a><td>internet url
+<tr><td><a href="utf.txt">utf</a><td>conversion between ascii, utf-8 and utf-16
+<tr><td><a href="vpeg.txt">vpeg</a><td>video compression for nearly static images
+<tr><td><a href="webcam.txt">webcam</a><td>interface for video source
+<tr><td><a href="win.txt">win</a><td>user interface to create windows, buttons, listboxes, ..
+<tr><td><a href="xml.txt">xml</a><td>xml reader
+<tr><td><a href="zip.txt">zip</a><td>data compression : zip, unzip
+</table>
+
+<br><br>
+as well as the following Windows API components :<br>
+<br>
+
+<table>
+<tr><td><a href="win/windows.txt">win/windows</a><td>low-level interface with Windows
+<tr><td><a href="win/directx11.txt">win/directx11</a><td>low-level interface with DirectX 11
+<tr><td><a href="win/direct_show.txt">win/direct_show</a><td>low-level interface with DirectShow
+</table>
+
+<br><hr><br>
+
+<br>
+If you have questions or need technical support :<br>
+<br>
+contact: marcsamu@hotmail.com<br>
+
+<br>
+<hr>
+
+</body>
+</html>

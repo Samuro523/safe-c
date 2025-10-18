@@ -1,0 +1,6069 @@
+<html>
+<head>
+  <title>Programming in Safe-C</title>
+<meta http-equiv="expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body { font: bold 1.0em Arial; color: #000080; }
+pre { font: bold 1.0em/100% 'Courier New'; color: black; }
+h1 { color: #A00000; }
+h2 { color: #408000; }
+h3 { color: #802000; }
+@media (max-width: 599px) { img {max-width: 100%; width: 100%; }}
+@media (min-width: 600px) {}
+</style>
+<body>
+
+<br>
+<h1>Programming in Safe-C</h1>
+
+<div id="toc"><h3>Table of contents</h3></div>
+<hr>
+<div id="contents">
+
+
+<H2>Introduction</H2>
+
+<p>Although the general public loves new technologies (tablets, smartphones, PC, ..),
+programming has the reputation of being hard and is not appreciated as hobby.
+
+<p>However, this was not the case in the years 1980, the golden age of micro computers,
+when many people were playing with little programs in "Basic".
+
+<p>What has changed since is that languages and programming environments have become
+much more complex and out of reach from the general public.
+
+Indeed, a new generation of computer scientists invented new concepts likes :
+"object-oriented programming", "classes", "polymorphism", "derived types",
+"exceptions", "lambda expression", etc..
+
+<p>Do these new concepts really bring improvements ? Well, at the risk of surprising you,
+i will tell you that they don't bring much, and that you can do very well without them.
+In fact, you don't need them at all, even for very large professional programs.
+
+<p>In this tutorial you will learn to program in a simple and fun way. But make no mistake :
+Safe-C is not a toy. Although our first programs will be simple, the langage is extremely
+powerful and allows writing in a very efficient way all kinds of programs.
+
+<hr>
+
+
+<H2>Chapter 1 : Dos Command Boxes</H2>
+
+<H3>1.1 Open a Dos Command Box</H3>
+<p>
+Before starting, you will have to master 'Dos Command Boxes'.
+Maybe you saw them before, they are the black boxes that "pros"
+use to send commands to the computer.
+
+<p>
+To open a box, clic on "Start", then on "Execute".
+</p>
+
+<img src=images/fig1.png>
+
+<p>Enter then the command
+<font style="font:bold 1.25em">cmd</font>
+and clic on <b>OK</b>.</p>
+
+<img src=images/fig2.png>
+
+<p>You should see a command box like this one :</p>
+
+<img src=images/fig3.png>
+
+<p>
+As you will spend quite some time using these boxes, it's worth
+to spend time modifying them a little to make your life easier.
+
+You can change the font and the size (for exemple stretch it vertically
+to have more space) by clicking on the upper left corner, then on Properties,
+</p>
+
+<img src=images/fig4.png>
+
+<p>which will make the following menu appear :</p>
+
+<img src=images/fig5.png>
+
+<p>
+Watch on the picture the height of the buffer memory which is set to 300,
+which will make a scrollbar appear on the right and will enable you
+to have more space.</p>
+
+<hr>
+
+<H3>1.2 Basic commands</H3>
+
+<p>Here are some commandes that you can try : type DIR then hit the Enter key(&lt;-)</p>
+
+<img src=images/fig6.png>
+
+<p>A list of folders of user Samuro will be shown.</p>
+
+<p>
+The DIR commande is the ancestor of the Windows Explorer, it is used
+to obtain a list of all files that appear in a directory.
+Here the default directory is C:\Users\Samuro.</p>
+
+<p>To change directory, we use the commande CD (change directory),
+for example type CD \WINDOWS (don't forget the \ !) to move into the WINDOWS folder,
+then type DIR. You should see a large number of Windows files.</p>
+
+<p>To display it page per page, try the command DIR /P &nbsp;&nbsp;&nbsp;
+ (be careful the / is the other way around)</p>
+<p>To clear the screen, try the command CLS.</p>
+
+<p>To move to the root of disk C (thus in no folder at all),
+type  CD \</p>
+
+<img src=images/fig7.png>
+
+<p>Now we can create a new folder, for example we can call it SAFE-C.
+Simply type MD SAFE-C  (MD means Make Directory).</p>
+
+<p>We can now move within the folder SAFE-C by typing CD \SAFE-C</p>
+
+<p>And finally we can display the list of everything in this folder with DIR :</p>
+
+<img src=images/fig8.png>
+
+<p>You can see that the folder is empty.</p>
+
+<p>If you start the windows explorer you can see the folder you just created :</p>
+
+<img src=images/fig9.png>
+
+<p>We will also mention the commande HELP that will give your infos about all existing
+commands. For exemple HELP DIR will give you infos about all options of the DIR command.</p>
+
+<hr>
+
+
+
+
+<H2>Chapter 2 : my first programs</H2>
+
+<a id="chap2"> <br> </a>
+
+<H3>2.1 Install the Safe-C compiler</H3>
+
+<p>To compile your programs, vous need the Safe-C compiler
+<a href="safe-c.zip">that you can download here</a>.
+
+<p>Create a folder on your C disk (for example C:\Safe-C),
+then unzip and copy all files in it.
+
+<p>You should see the following files :
+
+<ul>
+<li>mk.exe : the Safe-C compiler
+<li>std.lib : the standard library
+<li>makelib.exe : tool to create libraries
+<li>bug.exe : tool to find the error source line of a bug
+<li>grep.exe : tool to search text strings in the source code
+<li>extract.exe : tool to extract all resources from a windows program.
+</ul>
+
+<br>
+<H3>2.2 Write a simple program</H3>
+
+<p>Open a Dos Command Box (see previous chapter) and move into the compiler's
+folder.
+
+<br><br>
+<img src=images/fig10.png>
+
+<p>type the command :
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;notepad hello.c
+
+<p>Notepad will ask you : "would you like to create a new file ?"  Answer YES.
+
+<p>Type then your first program :</p>
+
+<hr>
+<PRE>
+// hello.c
+
+from std use console;
+
+void main()
+{
+  printf ("Hello, World !\n");
+}
+</PRE>
+<hr>
+
+<p>Save and close Notepad.
+
+<p>Check that your file hello.c was created within the folder :
+<br><br>
+<img src=images/fig11.png>
+
+<p>In the Dos Command Box, type then the command :
+<p>&nbsp;&nbsp;&nbsp;&nbsp;mk hello
+<p>that will compile your source text hello.c into the program hello.exe
+
+<p>All that's left to do is starting your program by typing :
+<p>&nbsp;&nbsp;&nbsp;&nbsp;hello
+
+<p>and you should see "Hello, World!" appear on the screen.
+
+<br><br>
+
+<p>Congratulations, you just created your first program !
+<br><br>
+
+<p>If you get a Windows error when you launch the program, it's likely that Windows Defender has deleted your program following an erroneous virus detection.
+In this case, you need to add the compiler directory in the excluded folders of Windows Defender.
+
+<p>Later, if you distribute your program over the Internet, and want to avoid alerts among your users,
+you need to notify the Windows Defender team a day in advance so that they can whitelist your program.
+This is done automatically by uploading your program on https://www.microsoft.com/en-us/wdsi/filesubmission
+
+
+<br><br><br><br>
+
+<H3>2.3 "Hello World" in details</H3>
+
+<hr>
+<PRE>
+// hello.c
+
+from std use console;
+
+void main()
+{
+  printf ("Hello, World !\n");
+}
+</PRE>
+<hr>
+<p>Let's examine this first program in details.
+<p>The first line starts with the sign // which indicates a comment.
+It is thus ignored by the compiler.
+
+<PRE>
+from std use console;
+</PRE>
+
+<p>The second line tells the compiler to open the standard library 
+std (std.lib) and to look for the component 'console'.
+
+If you have a look on the main page of this website to see the content of the component 'console'
+you will find the declaration of the function printf() that we will be able to use below.
+
+<PRE>
+void main()
+</PRE>
+
+<p>The third line indicates to the compiler that the program starts here.
+
+All Safe-C programs consist of one or more functions. main() is such a function,
+and in fact all programs have a main() function because that's where the program starts.
+In general the main() function will call other functions.
+
+<PRE>
+{
+  printf ("Hello, World !\n");
+}
+</PRE>
+
+<p>The curly brackets {   } enclose the instructions that the function will execute.
+
+Here we have just one instruction, printf(), which is used to display a text of the command box.
+Each instruction ends with a semicolon (;)
+
+<p>To call a function, you just give its name (here printf)
+et you provide any arguments within parenthesis (here "Hello, World !\n").
+When there are no arguments, you just add an empty pair of parenthesis ().
+
+<p>By the way, the sign \n does not display, it's just a symbol that indicates
+a carriage return to the next line.
+So, if you put a second printf() just after,
+it will display its text on the line below and not to the right.
+
+<p>In fact, we could have written the printf() in three times
+with the same effect :
+
+<hr>
+<PRE>
+  printf ("Hello, ");
+  printf ("World !");
+  printf ("\n");
+</PRE>
+<hr>
+
+<br>
+
+Just try to modify this program to display something else ..
+
+<br><br>
+
+<H3>2.4 My 2nd program</H3>
+
+The following program will use the formula C = 5/9*(F-32)
+to display a temperature conversion table between Farenheit and Celsius degrees :
+
+<PRE>
+    0   -17
+   20    -6
+   40     4
+   60    15
+   80    26
+  100    37
+  120    48
+  140    60
+  160    71
+  180    82
+  200    93
+  220   104
+  240   115
+  260   126
+  280   137
+  300   148
+</PRE>
+
+This program introduces several new ideas : variables and repetition.<br>
+  
+<hr>
+<PRE>
+// table Fahrenheit-Celsius
+
+from std use console;
+
+void main()
+{
+  int fahr, celsius;
+  int lower, upper, step;
+  
+  lower = 0;    // lower limit of temperature scale
+  upper = 300;  // upper limit
+  step = 20;    // step size
+  
+  fahr = lower;
+  while (fahr &lt;= upper)
+  {
+    celsius = 5 * (fahr-32) / 9;
+    printf ("%5d %5d\n", fahr, celsius);
+    fahr = fahr + step;
+  }
+}
+</PRE>
+<hr>
+
+<p>In Safe-C, you need to declare a list of all variables before using them :
+
+<PRE>
+  int fahr, celsius;
+  int lower, upper, step;
+</PRE>
+
+<p>"int" indicates that they are integer variables that contain a number without comma
+between -2147483648 and +2147483647.
+
+<p>The program starts with 3 assignations that give the variables their initial values :
+
+<PRE>
+  lower = 0;    // lower limit of temperature scale
+  upper = 300;  // upper limit
+  step = 20;    // step size
+</PRE>
+
+<p>The "while" instruction is used to loop : while the condition is true, we repeat the
+instructions between curly brackets.
+Note that the curly brackets are not necessary if there's only a single instruction.
+
+<PRE>
+  fahr = lower;
+  while (fahr &lt;= upper)
+  {
+    celsius = 5 * (fahr-32) / 9;
+    printf ("%5d %5d\n", fahr, celsius);
+    fahr = fahr + step;
+  }
+</PRE>
+
+<p>Most of the work is done in the computation "5 * (fahr-32) / 9" which will 
+put its results in the left-hand variable.
+The sign * indicates a multiply, the sign / indicates division.
+Note that, since these are 'int' variable, thus without comma,
+results will be truncated, the fractionnary part is removed.
+
+<PRE>
+    celsius = 5 * (fahr-32) / 9;
+</PRE>
+
+<p>The function printf is used to display a formatted line. Here the format %5d indicates
+that we want to display a decimal value (so int) in 5 positions.
+
+<PRE>
+    printf ("%5d %5d\n", fahr, celsius);
+</PRE>
+
+<p>The last instruction will increase 'fahr' by the value 'step'.
+More precisely, it will compute the right-hand expression 'fahr + step' and put the result
+into the left-hand variable "fahr". The variable receives thus a new value before
+the next iteration of the loop.
+
+<PRE>
+  fahr = fahr + step;
+</PRE>
+
+<p>You noticed that the temperatures are approximative since we work with type 'int'.
+Here's the same program with "float" variables :
+
+<hr>
+<PRE>
+// table Fahrenheit-Celsius
+
+from std use console;
+
+void main()
+{
+  float fahr, celsius;
+  float lower, upper, step;
+  
+  lower = 0.0;    // lower limit of temperature scale
+  upper = 300.0;  // upper limit
+  step = 20.0;    // step size
+  
+  fahr = lower;
+  while (fahr &lt;= upper)
+  {
+    celsius = 5.0 * (fahr-32.0) / 9.0;
+    printf ("%8.3f %8.3f\n", fahr, celsius);
+    fahr = fahr + step;
+  }
+}
+</PRE>
+<hr>
+
+<p>which results in the following output :
+
+<PRE>
+   0.000  -17.777
+  20.000   -6.666
+  40.000    4.444
+  60.000   15.555
+  80.000   26.666
+ 100.000   37.777
+ 120.000   48.888
+ 140.000   60.000
+ 160.000   71.111
+ 180.000   82.222
+ 200.000   93.333
+ 220.000  104.444
+ 240.000  115.555
+ 260.000  126.666
+ 280.000  137.777
+ 300.000  148.888
+</PRE>
+
+<p>Notice the special formatting for floats :
+
+<PRE>    
+    printf ("%8.3f %8.3f\n", fahr, celsius);
+</PRE>
+
+<p>which means : display with 8 character in total, including 3 digits after the comma.
+
+<p>The function printf has lots of options and allows the following formattings :
+
+<PRE>    
+   "% [flag] [width] [. precision] Type"
+
+   Type                          output
+   ----                          ------
+   %                             '%%' will be written '%'
+   d  int                        decimal number (-61)
+   u  uint or enum               unsigned number (12)
+   x  integer or enum            hexadecimal number (7fa)
+   e  float, double              scientifique format (3.9265e+2)
+   f  float, double              floating comma (392.65)
+   c  char or string             all chars, or max 'precision' chars.
+   C  wchar or wstring           all wchars, or max 'precision' wchars.
+   s  string                     string stops at nul, or "precision" chars
+   S  wstring                    wstring stops at Lnul, or "precision" wchar
+
+   flag
+   ----
+   -    For all            : justify left (default is : justify right).
+   +    For d, e, f        : prefix '+' for positive or zero numbers.
+   0    For d, e, f, x, u  : prefix leading '0' instead of spaces
+                             (not allowed together with flag '-')
+
+   width
+   -----
+   (Number)   minimum number of characters to display (padded with
+              spaces or digits zero if necessary).
+              The value is not truncated if the result is too long.
+   *          The width is not specified in the format string but in an additional
+              "int" parameter preceding the value to be displayed.
+
+   precision
+   ---------
+   . Number  A point without number indicates a precision of zero.
+             For f: it's the number of digits after the decimal point.
+                    Default precision is 6.
+                    No decimal point is displayed when precision is zero.
+             For s/S: it's the exact number of characters to display.
+                      By default it displays all characters.
+   .*        Precision is not specified in the format string but in an additional
+             "int" parameter preceding the value to be displayed.
+</PRE>
+
+
+<br><br><br>
+<p>
+<p>Here is now a shorter way to write the same program :
+
+<hr>
+<PRE>
+// table Fahrenheit-Celsius
+
+from std use console;
+
+void main()
+{
+  int fahr;
+  for (fahr=0; fahr&lt;=300; fahr+=20)
+    printf ("%5d %5d\n", fahr, 5 * (fahr-32) / 9);
+}
+</PRE>
+<hr>
+
+<p>The instruction "for" is made of 3 parts : the first "fahr=0" is only executed once.
+The condition "fahr&lt;=300" is tested before each loop iteration to check if we continue to loop,
+and the third part "fahr+=20" is executed after the instructions to repeat, at the end of each loop.
+
+<br><br>
+
+<p>The following version of the program uses "constants" which are variables that never change value.
+You will write them usually in upper case.
+Using a constant at the top of the program is interesting when you might want
+to change that value often or when it is used at several places in the program.
+
+<hr>
+<PRE>
+// table Fahrenheit-Celsius
+
+from std use console;
+
+void main()
+{
+  const int LOWER = 0;    // lower limit of temperature scale
+  const int UPPER = 300;  // upper limit
+  const int STEP  = 20;   // step size
+
+  int fahr = LOWER;
+  int celsius;
+  
+  while (fahr &lt;= UPPER)
+  {
+    celsius = 5 * (fahr-32) / 9;
+    printf ("%5d %5d\n", fahr, celsius);
+    fahr = fahr + STEP;
+  }
+}
+</PRE>
+<hr>
+
+<br>
+
+<H3>2.5 Input-Output</H3>
+
+<br>
+This program will ask you for 2 numbers and compute their sum :
+
+<hr>
+<PRE>
+// add.c
+
+from std use console;
+
+void main()
+{
+  int a, b, c;
+  
+  printf ("enter first number : ");
+  scanf (" %d", out a);
+  
+  printf ("enter second number : ");
+  scanf (" %d", out b);
+  
+  c = a + b;
+  
+  printf ("the sum is %d\n", c);
+}
+</PRE>
+
+<hr>
+<PRE>
+enter first number : 123
+enter second number : 79
+the sum is 202
+</PRE>
+<hr>
+
+<p>The function scanf is used to input a value at the keyboard. It supports the following formattings :
+
+<PRE>
+  A blank character matches with zero or more white spaces to be ignored.
+  A non-blank character, except a percent sign (%),
+    must match exactly with the input character or the function will fail.
+
+  Format :  "%[*][width] Type"
+
+    *         A value is read but is not stored (there is no matching parameter).
+   width      Maximum number of characters to read.
+
+   Type                        Input
+   ----                        -----
+   '%'                         will read '%%'
+
+   d   any int                 decimal number optionnaly prefixed with + or - (-61)
+
+   u   any uint or enum        unsigned number (12)
+
+   x   same as d or u          hexadecimal number (7fa)
+
+   f   float or double         floating-point number (0,5) (12.4e +3)
+   e   same as f
+
+   c   char or string          fills parameter, or reads max 'width' chars.
+   C   wchar or wstring        fills parameter, or reads max 'width' wchars.
+   s   char or string          same as c but stops at first blank.
+   S   wchar or wstring        same as C but stops at first blank.
+</PRE>
+      
+<br><br>
+
+<p>The following program asks you to enter 3 numbers before computing their average :
+
+<hr>
+<PRE>
+// averager.c
+
+from std use console;
+
+void main()
+{
+  int a, b, c;
+
+  printf ("please input 3 numbers : ");
+  scanf (" %d %d %d", out a, out b, out c);
+
+  printf ("the average is %d\n", (a+b+c) / 3);
+}
+</PRE>
+<hr>
+
+<br><br><br>
+
+<p>The following program will read values and compute their average, however you will notice that we don't use scanf().
+Input values are passed to the function main() during program start.
+
+<hr>
+<PRE>
+// averager2.c
+
+from std use console, strings;
+
+void main (string[] arg)
+{
+  int i;
+  float f, sum, count;
+  
+  sum = 0.0;
+  count = 0.0;
+  for (i=1; i&lt;arg'length; i++)
+  {
+    sscanf (arg[i], " %f", out f);
+    sum += f;
+    count += 1.0;
+  }
+  
+  printf ("the average is %f\n", sum/count);
+}
+</PRE>
+<hr>
+
+Here is how to start it :
+
+<hr>
+<PRE>
+C:\SAFE-C> averager2 56 129 126
+the average is 103.666664
+</PRE>
+<hr>
+
+Be sure to provide at least one value, otherwise count will equal zero and
+this will cause a "division par zero" program crash.
+
+<br><br><br>
+
+
+<p>With the following program you can create a file on disk and write text lines in it.
+
+<hr>
+<PRE>
+// writer.c
+
+from std use console, files;
+
+void main()
+{
+  FILE file;
+  int  rc;
+  
+  const string FILENAME = "myfile.txt";
+  
+  rc = fcreate (out file, FILENAME, ANSI);
+  if (rc &lt; 0)
+  {
+    printf ("error: cannot create file %s\n", FILENAME);
+    return;
+  }
+  
+  fprintf (ref file, "Hi World !\n");
+  fprintf (ref file, "This is a test writing into file %s\n", FILENAME);
+  fprintf (ref file, "have a good day.\n");
+
+  fclose (ref file);
+}
+</PRE>
+<hr>
+
+<p>After execution, the file "myfile.txt" will exist on your disk.
+If you open it with notepad, you will see that it contains :
+
+<hr>
+<PRE>
+Hi World !
+This is a test writing into file myfile.txt
+have a good day.
+</PRE>
+<hr>
+
+<br><br><br>
+
+<p>The following program will read a text file and display its content on the screen.
+
+<hr>
+<PRE>
+// reader.c
+
+from std use console, files;
+
+void main()
+{
+  FILE file;
+  int  rc;
+  char line[100];
+  
+  const string FILENAME = "myfile.txt";
+  
+  rc = fopen (out file, FILENAME);
+  if (rc &lt; 0)
+  {
+    printf ("error: cannot open file %s\n", FILENAME);
+    return;
+  }
+  
+  while (fgets (ref file, out line) == 0)
+    printf ("%s", line);
+    
+  fclose (ref file);
+}
+</PRE>
+<hr>
+
+<p>if you execute it, you will see the following display :
+
+<hr>
+<PRE>
+Hi World !
+This is a test writing into file myfile.txt
+have a good day.
+</PRE>
+<hr>
+
+<br><br><br>
+
+<p>The following program will read a text file and count the number of "a" letters it contains.
+
+<hr>
+<PRE>
+// counter.c
+
+from std use console, files, strings;
+
+void main()
+{
+  FILE file;
+  int  rc;
+  char line[100];
+  int  count;
+  
+  const string FILENAME = "myfile.txt";
+  
+  rc = fopen (out file, FILENAME);
+  if (rc &lt; 0)
+  {
+    printf ("error: cannot open file %s\n", FILENAME);
+    return;
+  }
+  
+  count = 0;
+  while (fgets (ref file, out line) == 0)
+  {
+    int len = strlen(line);
+    int i;
+    for (i=0; i&lt;len; i++)
+    {
+      if (line[i] == 'a')
+        count++;
+    }
+  }
+    
+  fclose (ref file);
+  
+  printf ("number of A's : %d\n", count);
+}
+</PRE>
+<hr>
+
+<p>If you try it, you will see the following output :
+
+<hr>
+<PRE>
+number of A's : 4
+</PRE>
+<hr>
+
+<br><br><br>
+
+<p>It's possible to separate the parts "file reading" and "letter counting" by using a function.
+
+<hr>
+<PRE>
+// counter2.c
+
+from std use console, files, strings;
+
+int number_of_a (string line)
+{
+  int len = strlen(line);
+  int count = 0;
+  int i;
+  for (i=0; i&lt;len; i++)
+  {
+    if (line[i] == 'a')
+      count++;
+  }
+  return count;
+}
+
+void main()
+{
+  FILE file;
+  int  rc;
+  char line[100];
+  int  count;
+  
+  const string FILENAME = "myfile.txt";
+  
+  rc = fopen (out file, FILENAME);
+  if (rc &lt; 0)
+  {
+    printf ("error: cannot open file %s\n", FILENAME);
+    return;
+  }
+  
+  count = 0;
+  while (fgets (ref file, out line) == 0)
+    count += number_of_a (line);
+    
+  fclose (ref file);
+  
+  printf ("number of A's : %d\n", count);
+}
+</PRE>
+<hr>
+
+<br><br><br>
+
+<p>It's possible to put the function in a separate file.
+You need then to create 3 files :
+
+<hr>
+<PRE>
+// acounter.h
+
+int number_of_a (string line);
+</PRE>
+
+<hr>
+<PRE>
+// acounter.c
+
+from std use strings;
+
+public int number_of_a (string line)
+{
+  int len = strlen(line);
+  int count = 0;
+  int i;
+  for (i=0; i&lt;len; i++)
+  {
+    if (line[i] == 'a')
+      count++;
+  }
+  return count;
+}
+</PRE>
+
+<hr>
+<PRE>
+// mycounter.c
+
+from std use console, files;
+use acounter;
+
+void main()
+{
+  FILE file;
+  int  rc;
+  char line[100];
+  int  count;
+  
+  const string FILENAME = "myfile.txt";
+  
+  rc = fopen (out file, FILENAME);
+  if (rc &lt; 0)
+  {
+    printf ("error: cannot open file %s\n", FILENAME);
+    return;
+  }
+  
+  count = 0;
+  while (fgets (ref file, out line) == 0)
+    count += number_of_a (line);
+    
+  fclose (ref file);
+  
+  printf ("number of A's : %d\n", count);
+}
+</PRE><hr>
+
+<p>You need only to compile the file containing the function main,
+the compiler will follow the "use" clauses and find the other files
+automatically.
+
+<hr>
+
+
+
+<H2>Chapter 3 : Calender</H2>
+
+<br>
+<H3>3.1 Day of the week</H3>
+
+<p>To display the date and time, try the following program :
+<br>
+<hr>
+<PRE>
+// date1.c
+
+from std use calendar, console;
+
+void main()
+{
+  DATE_TIME now;
+
+  get_datetime (out now);
+
+  printf ("We are the %02d/%02d/%04d ", now.day, now.month, now.year);
+  printf ("and it is %02d:%02d:%02d.\n", now.hour, now.min, now.sec);
+}
+</PRE>
+<hr>
+
+<br><br>
+<p>which displays :
+
+<hr>
+<PRE>
+We are the 03/01/2011 and it is 19:24:43.
+</PRE>
+<hr>
+
+<br>
+<p>DATE_TIME is a une structure which is declared like this in the standard library component "calendar" :
+
+<hr>
+<PRE>
+struct DATE_TIME
+{
+  int2 year;     // 1901 to 9999
+  int1 month;    //    1 to   12
+  int1 day;      //    1 to   31
+  int1 hour;     //    0 to   23
+  int1 min;      //    0 to   59
+  int1 sec;      //    0 to   59
+  int2 msec;     //    0 to  999
+}
+</PRE>
+<hr>
+
+<p>You can see it contains 7 fields (year, month, day, hour, min, sec and msec).
+
+<p>The function get_datetime() defined in calendar will fill the variable 'now',
+then we will use printf() to display the different fields.
+
+<p>Watch the formatting of printf : %02d indicates a numeric field of 2 digits,
+%04d indicates a numeric field of 4 digits.
+
+<p>We could have written too %2d and %4d but then the program would have displayed this :
+
+<PRE>
+We are the  3/ 1/2011 and it is 19:25:53.
+</PRE>
+
+<p>You see the difference ?
+The 0 tells printf to fill the field with zeroes instead of blanks.
+
+<p>Take a guess, if we write %d instead of %2d, what will it print ?
+Just try it ...
+
+<br><br><br><br><br>
+
+<H3>3.2 Months of the year</H3>
+
+<p>Let's complicate a little.
+How do you display the months of the year in letters instead of digits ?
+Try this :</p>
+
+<hr>
+<PRE>
+// date2.c
+
+from std use calendar, console;
+
+void main()
+{
+  const string months[12] = {"Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+                             "Juillet", "Aout", "Septembre", "Octobre", "Novembre",
+                             "Decembre"};
+  DATE_TIME now;
+
+  get_datetime (out now);
+
+  printf ("Nous sommes le %d %s %d\n", now.day, months[now.month-1], now.year);
+}
+</PRE>
+<hr>
+<PRE>
+Nous sommes le 3 Janvier 2011
+</PRE>
+<hr>
+
+<p>Take a guess, how does mois[now.month-1] work ?
+<p>The now.month indicates the month from 1 to 12. We subtract 1 from it because
+array indexes of months[] always start at 0.
+
+<p>Notice that we used %s to indicate a "string" instead of a numeric
+field as previously.</p>
+
+<br><br><br><br>
+
+<H3>3.3 Display a calendar</H3>
+
+<p>To close this chapter, we shall display a calendar with all the days
+of this month.
+
+
+<hr>
+<PRE>
+// date3.c
+
+from std use calendar, console;
+
+void main()
+{
+  const string mois[12] = {"Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+                             "Juillet", "Aout", "Septembre", "Octobre", "Novembre",
+                             "Decembre"};
+  const string jours_semaine[7] = {"Lundi", "Mardi", "Mercredi", "Jeudi",
+                                   "Vendredi", "Samedi", "Dimanche"};
+  DATE_TIME now;
+  int       jour;
+
+  get_datetime (out now);
+
+  for (jour=1; jour<=max_days_in_month (now.month, now.year); jour++)
+  {
+    printf ("%9s : Le %2d %s %d\n",
+            jours_semaine[day_of_week (jour,now.month, now.year)-1],
+            jour,
+            mois[now.month-1],
+            now.year);
+  }
+}
+</PRE>
+<hr>
+
+<p>The function max_days_in_month() computes the maximum number of days of a month,
+and the function day_of_week() computes the weekday of a date (1=monday,
+7=sunday). All these functions are defined within the component 'calendar'.</p>
+
+<p>The instruction 'for' allows to make the variable 'jour' vary between 1 and the maximum
+number of days of the month by incrementing it by one (jour++) in each loop.</p>
+<br>
+Try to modify this program to display something else ..
+
+<br><br><br>
+
+<hr>
+
+
+<H2>Chapter 4 : data types</H2>
+
+<br>
+<H3>4.1 Integers</H3>
+
+<p>Safe-c has a rich set of data types for storing integers.
+
+<p>Here's a list :
+
+<br><br>
+
+<table border="1">
+  <tr>
+    <th>name of type</th>
+    <th>synonym</th>
+    <th>memory use</th>
+    <th>interval</th>
+  </tr>
+  <tr>
+    <td>int1</td>
+    <td>tiny</td>
+    <td>1 byte</td>
+    <td>from -128 to +127</td>
+  </tr>
+  <tr>
+    <td>int2</td>
+    <td>short</td>
+    <td>2 bytes</td>
+    <td>from -32_768 to +32_767</td>
+  </tr>
+  <tr>
+    <td>int4</td>
+    <td>int</td>
+    <td>4 bytes</td>
+    <td>from -2_147_483_648 to +2_147_483_647</td>
+  </tr>
+  <tr>
+    <td>int8</td>
+    <td>long</td>
+    <td>8 bytes</td>
+    <td>from -9_223_372_036_854_775_808 to +9_223_372_036_854_775_807</td>
+  </tr>
+</table>
+
+<br>
+There are also unsigned types :</p>
+
+<table border="1">
+  <tr>
+    <th>name of type</th>
+    <th>synonym</th>
+    <th>memory use</th>
+    <th>interval</th>
+  </tr>
+  <tr>
+    <td>uint1</td>
+    <td>byte</td>
+    <td>1 byte</td>
+    <td>from 0 to 255</td>
+  </tr>
+  <tr>
+    <td>uint2</td>
+    <td>ushort</td>
+    <td>2 bytes</td>
+    <td>from 0 to 65_535</td>
+  </tr>
+  <tr>
+    <td>uint4</td>
+    <td>uint</td>
+    <td>4 bytes</td>
+    <td>from 0 to 4_294_967_295</td>
+  </tr>
+</table>
+
+<br>
+
+<p>The type 'int' will be used most of the time.
+<p>Smaller types can be useful :<br>
+<br>
+. when you need to declare many variables of that type, for example for a large array.<br>
+&nbsp;&nbsp;Choosing a smaller types will help you then to save memory space.<br>
+<br>
+. when you need to provide a type of a give size to an external interface.<br>
+<br>
+
+
+<p>Here's an example that uses all of these types:
+
+
+<hr>
+<PRE>
+// types.c
+
+from std use console;
+
+void main()
+{
+  int1 t;
+  int2 s;
+  int4 i;
+  int8 l;
+
+  byte  b;
+  uint2 n;
+  uint  u;
+
+  t = 1;
+  s = 32000;
+  i = 1_000_000;                       // 1 million
+  l = 1000L * 1000L * 1000L * 1000L;
+
+  b = 0;
+  n = 60000;
+  u = 4_000_000_000;
+
+  t = (tiny)(t * 100);    // conversion of the result to type tiny 
+
+  printf ("these are signed numbers : %d, %d, %d et %d\n", t, s, i, l);
+  printf ("these are unsigned numbers : %u, %u et %u\n", b, n, u);
+
+  printf ("the smallest long is %d\n", long'min);
+  printf ("the largest long is %d\n", l'max);
+}
+</PRE>
+<hr>
+
+<p>which displays :
+
+<hr><PRE>
+these are signed numbers : 100, 32000, 1000000 et 1000000000000
+these are unsigned numbers : 0, 60000 et 4000000000
+the smallest long is -9223372036854775808
+the largest long is 9223372036854775807
+</PRE><hr>
+
+<br>
+<p>Internally, all computations are performed either in int, uint or long.
+If the result is stored in a smaller type, you have to convert it first :
+
+<hr><PRE>
+  int2 a = 1;
+  int2 b = 2;
+  int2 c = (int2)(a + b);
+</PRE><hr>
+
+<p>Literals of type 'long' have an "L" suffix. If one of the operands has type 'long',
+then the result will also have type 'long'.
+
+<hr><PRE>
+  int  a = 1;
+  long b = a + 1L;
+</PRE><hr>
+
+<p>In the function printf, signed integers are represented by %d and unsigned ones by %u.
+You can specify a minimum number of characters (for example %10d), prefix with zeroes
+instead of blanks (%010d), or justify left (%-10d).
+
+<p>Attributes 'min et 'max allow you to query the smallest and largest value of a type.
+<br><br><br>
+
+<br>
+<H3>4.2 Floating-Point numbers</H3>
+
+<p>For math computations (for example 3D), people use the types 'float' and 'double' :
+
+<br><br>
+
+<table border="1">
+  <tr>
+    <th>name of type</th>
+    <th>synonym</th>
+    <th>memory use</th>
+    <th>tinyest number</th>
+    <th>largest number</th>
+    <th>precision</th>
+  </tr>
+  <tr>
+    <td>float4</td>
+    <td>float</td>
+    <td>4 bytes</td>
+    <td>1.5E-45</td>
+    <td>3.4E+38</td>
+    <td>7 digits</td>
+  </tr>
+  <tr>
+    <td>float8</td>
+    <td>double</td>
+    <td>8 bytes</td>
+    <td>5.0E-324</td>
+    <td>1.7E+308</td>
+    <td>15 à 16 digits</td>
+  </tr>
+</table>
+
+
+<br>
+<br>
+
+<p>Here's an example that uses these types:
+
+<hr>
+<PRE>
+// types2.c
+
+from std use console;
+
+void main()
+{
+  float  f;
+  double d;
+
+  f = 16.0 * 1.0e+10;
+  d = 1.0e150 / 7.25e34;
+
+  printf ("these are floating-point numbers : %f, %f ", f, d);
+  printf ("that you can also display in scientific notation : %e, %e\n", f, d);
+}
+</PRE>
+<hr>
+
+<p>which displays :
+
+<hr><PRE>
+these are floating-point numbers : 160000000000.000000, 137931034482758600000000
+00000000000000000000000000000000000000000000000000000000000000000000000000000000
+000000000000.000000 that you can also display in scientific notation : 1.600000e
++11, 1.379310e+115
+</PRE><hr>
+
+<br>
+<p>
+<p>In the function printf, floating-point types are represented by %f in normal display and by %e
+in scientific display (with exponent).
+
+<p>You can also specify a minimum number of characters (for example %10f), prefix with zeroes
+instead of blanks (%010f), justify to the left (%-10f).
+
+<p>You can also specify the number of decimal digits wished (%.2f), or combine both,
+for example if you want to display 12 characters from which 6 are decimals you will write (%12.6f).
+
+<p>Note that printf might ignore your number of characters
+ (for example if you specify only %2f to display a billion).
+
+<br><br><br>
+
+<br>
+<H3>4.3 Enumerations</H3>
+
+
+<p>
+There are essentially two widely used 'enumeration' types :
+
+<p>. type 'bool' that can have the values 'false' or 'true' and allows logical computations.
+
+<p>. type 'char' that stores ascii characters of everything displayed on screen.</p>
+
+<br>
+<p>
+These types are stored in 1 byte. Here's an example of their use :
+<br><br>
+
+<hr>
+<PRE>
+// types3.c
+
+from std use console;
+
+void main()
+{
+  bool  b;
+  char  c;
+
+  b = 1230 > 63+6;   // true
+  b = true;
+
+  c = '$';
+
+  printf ("this is a bool : %u and this is a char : %c\n", b, c);
+}
+</PRE>
+<hr>
+
+<p>which displays :
+
+<hr>
+<PRE>
+this is a bool : 1 and this is a char : $
+</PRE>
+<hr>
+
+<p>In the function printf, type 'bool' is specified as an unsigned number (by %u) and displays
+a 0 for false and a 1 for true; type char is specified by %c.
+
+<p>Finally, we should mention also type 'wchar' (in 2 bytes) that can store all international characters, even chinese,
+and is specified by %C (upper case C).
+
+
+<br><br><br><br><br>
+<H3>4.4 User-defined enumeration types</H3>
+
+<p>
+You can create your own enumeration type.
+Imagine you're writing a card game,
+you could create an enumeration type FAMILY as follows :</p>
+
+<br>
+<hr>
+<PRE>
+// types4.c
+
+from std use console;
+
+void main()
+{
+  enum FAMILY {PIQUE, AS, CARREAU, TREFLE};
+
+  FAMILY f;
+
+  f = CARREAU;
+
+  f++;         // increases f by 1, so f has now value TREFLE
+
+  printf ("f has value         : %u\n", f);
+  printf ("in clear this means : %s\n", f'string);
+
+  printf ("first is : %u\n", f'first);
+  printf ("last is : %s\n", f'last'string);
+}
+</PRE>
+<hr>
+
+<p>which displays :
+
+<hr>
+<PRE>
+f has value         : 3
+in clear this means : TREFLE
+first is : 0
+last is : TREFLE
+</PRE>
+<hr>
+
+<p>In the function printf, this enumeration type can be displayed in 2 ways :
+
+<p>- using %u, which will display its sequence number starting at 0, so it will display 0 for PIQUE, 1 for AS, etc ...
+
+<p>- or the variable can be converted into string using the attribute 'string and be displayed with %s (so here TREFLE).
+
+<p>Attributes 'first and 'last are used to compute the first and the last value of an enumeration type.
+
+<br><br>
+<hr>
+
+
+<H2>Chapter 5 : arrays</H2>
+
+<br>
+<H3>5.1 initialisation and display</H3>
+
+<br>
+<p>The following program declares an array of 6 int's and fills it in 3 different ways before displaying its elements :
+
+<hr><PRE>
+// tableau.c
+
+from std use console;
+
+void main()
+{
+  int tab[6];
+  int i;
+
+  tab = {12, 71, 33, 46, 84, 6};
+
+  for (i=0; i&lt;tab'length; i++)
+    printf ("tab[%d] = %d\n", i, tab[i]);
+  printf ("\n");
+    
+  tab[4:2] = {all => 1};
+
+  for (i=0; i&lt;tab'length; i++)
+    printf ("tab[%d] = %d\n", i, tab[i]);
+  printf ("\n");
+    
+  clear tab;
+
+  for (i=0; i&lt;tab'length; i++)
+    printf ("tab[%d] = %d\n", i, tab[i]);
+  printf ("\n");
+}
+</PRE><hr>
+
+<p>It initialises first the array by copying an aggregate to it :
+
+<hr><PRE>
+  tab = {12, 71, 33, 46, 84, 6};
+</PRE><hr>
+
+<p>Then, it replaces its elements 4 and 5 by the value 1 :
+
+<hr><PRE>
+  tab[4:2] = {all => 1};
+</PRE><hr>
+
+<p>Finally, it puts zero in all elements :
+
+<hr><PRE>
+  clear tab;
+</PRE><hr>
+
+<p>which displays :
+
+<hr><PRE>
+tab[0] = 12
+tab[1] = 71
+tab[2] = 33
+tab[3] = 46
+tab[4] = 84
+tab[5] = 6
+
+tab[0] = 12
+tab[1] = 71
+tab[2] = 33
+tab[3] = 46
+tab[4] = 1
+tab[5] = 1
+
+tab[0] = 0
+tab[1] = 0
+tab[2] = 0
+tab[3] = 0
+tab[4] = 0
+tab[5] = 0
+</PRE><hr>
+
+<br>
+<p>When you declare an array of 6 elements, you use indexes in range 0 to 5 because
+ arrays always start at index 0.
+<p>Note the presence of the attribute 'length.
+It is equivalent to the value 6 but with a big advantage : if you decide to enlarge your array to 10 elements,
+then the program will adapt automatically to the new length.
+
+<br><br><br>
+<H3>5.2 array slices</H3>
+
+<p>Slices are used, like for a cake, to take one or several elements of an array.
+
+<p>A slice is indicated by the notation " array [ start_index : number_of_elements ] "
+where start_index indicates the first index of the slice and number_of_elements indicates
+the number of elements.
+
+<p>The example below clears first the array, then it copies the values
+{1, 2, 3} into the first 3 elements (slice starts at 0, of length 3).
+Finally, it copies the slice into the next 3 array elements.
+
+<hr>
+<PRE>
+// tableau2.c
+
+from std use console;
+
+void main()
+{
+  int tab[6];
+  int i;
+
+  clear tab;
+
+  tab[0:3] = {1, 2, 3};
+
+  tab[3:3] = tab[0:3];
+
+  for (i=0; i&lt;tab'length; i++)
+    printf ("tab[%d] = %d\n", i, tab[i]);
+}
+</PRE>
+<hr>
+
+<p>which displays :
+
+<hr><PRE>
+tab[0] = 1
+tab[1] = 2
+tab[2] = 3
+tab[3] = 1
+tab[4] = 2
+tab[5] = 3
+</PRE><hr>
+
+<p>Note that if you remove the instruction clear in the above example
+you will get the following compiler error message :
+
+<hr><PRE>
+line 14 col 14 : semantic : local variable 'tab' used without having been initialized 
+</PRE><hr>
+
+<p>Why ?
+
+<p>Because a variable is not considered as initialized until it receives a full value of all its elements at once.
+However in this example we fill only the first 3 elements before reading it.
+
+Safe-c requires all variables to be initialized before being read, this garantees deterministic
+programs that behave the same way at each execution.
+
+<br><br>
+
+<H3>5.3 Sorting an array</H3>
+
+<p>Here's how to sort an array using the library component 'sorting':
+<br>
+
+<hr>
+<PRE>
+// tableau3.c
+
+from std use console, sorting;
+
+
+int cmp (int a, int b)
+{
+  if (a < b)
+    return -1;
+  if (a > b)
+    return +1;
+  return 0;
+}
+
+package tri = new HeapSort (ELEMENT => int,
+                            compare => cmp);
+
+void main()
+{
+  int tab[6];
+  int i;
+
+  tab = {12, 71, 33, 46, 84, 6};
+
+  tri.sort (ref tab);
+
+  for (i=0; i&lt;tab'length; i++)
+    printf ("tab[%d] = %d\n", i, tab[i]);
+}
+</PRE>
+<hr>
+
+<p>which displays :
+
+<hr>
+<PRE>
+tab[0] = 6
+tab[1] = 12
+tab[2] = 33
+tab[3] = 46
+tab[4] = 71
+tab[5] = 84
+</PRE>
+<hr>
+
+<br>
+<p>
+<p>The component 'sorting' contains several generic packages to sort arrays of any type
+(in fact generic means it is independent of any type).
+
+<p>First, you need to explain to the sort function how to compare two elements, here two 'int'.
+To achieve that, we declare a function 'cmp' that compares two 'int' and
+that returns -1 if the first is smaller, 0 if they're equal, and +1 if the first is larger.
+
+<p>Then we "instantiate" (it means we create) a copy of the sort package
+by giving the generic package the type 'int' and our comparison function.
+It will then create a function "sort" that we can use.
+
+<p>The displayed result is the sorted array.
+
+<br><br><br>
+
+<br>
+<H3>5.4 length check during compilation</H3>
+
+<hr>
+<PRE>
+// tableau4.c
+
+from std use console;
+
+void main()
+{
+  int tab[6];
+
+  tab = {1, 2, 3};    // <-- ERROR
+}
+</PRE>
+<hr>
+
+<p>The above example will generate a compiler error message.
+Array lengths must match in an assignment.
+Copying an aggregate of 3 values to an array of 6 elements will obviously not work.
+
+<br><br><br>
+
+<H3>5.5 length check during execution</H3>
+
+<hr><PRE>
+// tableau5.c
+
+from std use console;
+
+void main()
+{
+  int tab[6];
+  int i;
+
+  for (i=0; i&lt;100; i++)
+  {
+    printf ("filling %d ..\n", i);
+    tab[i] = i;
+  }
+}
+</PRE><hr>
+
+<p>The above example tries to copy a value into the indexes 0 to 99 of an array that has only 6 elements.
+If you execute this program it will first display :
+
+<hr><PRE>
+filling 0 ..
+filling 1 ..
+filling 2 ..
+filling 3 ..
+filling 4 ..
+filling 5 ..
+filling 6 ..
+</PRE><hr>
+
+and then it will crash with the following window :</p>
+
+<img src=images/fig12.png>
+
+<p>Windows will sent a crash report about this to Microsoft and ask the database to check if a solution exists
+for this problem. Obviously, as Microsoft doesn't know your program you won't receive an answer ..
+
+<p>For more info about crashes, please read the next chapter ..
+
+<br><br><br>
+<hr>
+
+
+<H2>Chapter 6 : crashs and tracing</H2>
+
+<br>
+<H3>6.1 create an exception treatment</H3>
+
+<hr>
+<PRE>
+// tableau5.c
+
+from std use console, exception;
+
+void main()
+{
+  int tab[6];
+  int i;
+
+  arm_exception_handler();
+  
+  for (i=0; i<100; i++)
+  {
+    printf ("remplissage de %d ..\n", i);
+    tab[i] = i;
+  }
+}
+</PRE>
+<hr>
+
+<p>Here's again the example from the previous chapter, but with two changes :<br>
+<br>
+. we added the component 'exception' in the use list,<br>
+<br>
+. we added a call to the function arm_exception_handler() at the start of the program.
+<br>
+<p>This function will "arm" a special exception treatment in case of crash.
+Instead of sending a report about the crash to Microsoft, it will display this dialog :
+<br><br>
+
+<img src=images/fig13.png>
+
+<p>You can see that the error occured in the source file 'tableau5.c' at line 15 !
+
+<p>All you need to do is open tableau5.c with notepad, to press the keys
+Ctrl+G and to type the line number (here 15), to see where your program
+crashed. Ah, it's at line "tab[i] = i;" no wonder.
+
+<br><br><br><br>
+
+<H3>6.2 Distributed programs</H3>
+
+<p>The above exception treatment works fine because the compiler put in your directory a file
+"tableau5.dbg" with the list of source code line numbers of your program.
+If you distribute your program on the internet you will probably give only "tableau5.exe".
+In case of crash, the window will be different :
+<br><br>
+
+<img src=images/fig14.png>
+
+<p>How can we find again the line number here ?
+By using the tool "bug.exe" provided with the compiler.
+Provided you kept the file "tableau5.dbg" in the current directory,
+try to type the following command :
+
+<hr>
+<PRE>
+bug tableau5.dbg 401075
+</PRE>
+<hr>
+
+<p>The tool will then answer this :
+<br>
+
+<img src=images/fig15.png>
+
+<p>which will allow you to also find the error's source file and line.
+
+
+<br><br><br>
+
+<br>
+<H3>6.3 Error reports</H3>
+
+<p>If you closed the error message a little too quickly, don't panic, it is not lost.
+Indeed, an error report file CRASH-REPORT.TXT is written in the program's current directory
+and it contains the same information :
+
+<hr><PRE>
+crash date   : 03/11/2014 00:52:59
+application  : C:\PROJECTS\SafeCSamples1\tableau5.exe
+command line : tableau5
+compile date : 03/11/2014 00:48:57
+
+ACCESS_VIOLATION at rojects/safecsamples1/tableau5.c:15
+401016
+77120bb9
+77120b8f
+fffffffe
+
+eax=00000006 ebx=0000000a ecx=7506d371 edx=0018faf4
+esi=00000014 edi=00000013 ebp=0018ff88 esp=0018ff60
+</PRE><hr>
+
+<br>
+
+<br>
+<H3>6.4 Tracing</H3>
+
+<p>Until now we displayed the content of variables using printf.
+However this is not really practical if your program becomes large and displays a lot of lines.
+
+<p>Instead of printf, we will thus prefer to use a trace file that you first need to open
+at program start with open_trace(), then in which you will write text lines
+using the function trace() which has the same syntax as printf().
+
+<hr><PRE>
+// test1.c
+
+from std use exception, tracing;
+
+void main()
+{
+  int tab[6];
+  int i;
+
+  open_trace ("test1.tra", 64*1024*1024);
+
+  for (i=0; i<100; i++)
+  {
+    trace ("filling %d\n", i);
+    tab[i] = i;
+  }
+}
+</PRE><hr>
+<br>
+
+<p>In case of crash of your program, all you need to do is open your trace file
+with notepad (here it is called test1.tra) to see til where your program ran.
+
+<p>In this example, the file will contain :
+
+<hr><PRE>
+11/01/10 22:03:55 : filling 0
+11/01/10 22:03:55 : filling 1
+11/01/10 22:03:55 : filling 2
+11/01/10 22:03:55 : filling 3
+11/01/10 22:03:55 : filling 4
+11/01/10 22:03:55 : filling 5
+11/01/10 22:03:55 : filling 6
+</PRE><hr>
+
+<p>Note that the date is reversed, here 11/01/10 indicates 10th january 2011.
+
+<p>When the trace file becomes too large (>64 MB), it is automatically renamed
+into .OLD and a new empty file is created.
+Thus there's no risk to fill your harddisk.
+You can specify another maximum size in open_trace().
+
+<br>
+<hr>
+
+
+<H2>Chapter 7 : strings</H2>
+
+<br>
+<H3>7.1 array of char and string</H3>
+
+<hr><PRE>
+// str1.c
+
+from std use console;
+
+void main()
+{
+  string(4) nom1, nom2;
+
+  nom1 = "Marc";
+  nom2 = "Eric";
+
+  printf ("Mon nom1 est : %s\n", nom1);
+  printf ("Mon nom2 est : %s\n", nom2);
+}
+</PRE><hr>
+
+<p>The above example declares two 4-character string variables,
+then it copies "Marc" and "Eric" in these variables and displays them :
+
+<hr><PRE>
+Mon nom1 est : Marc
+Mon nom2 est : Eric
+</PRE><hr>
+
+<p>A string is simply an array (or table) of characters. Indeed, the line :
+
+<hr><PRE>
+  string(4) nom1, nom2;
+</PRE><hr>
+
+<p>could have been written as one of the following 3 equivalent lines :
+
+<hr><PRE>
+  string  nom1(4), nom2(4);
+  char[4] nom1, nom2;
+  char    nom1[4], nom2[4];
+</PRE><hr>
+
+<p>It's because, in fact, the type "string" is predefined as :
+
+<hr><PRE>
+  typedef char[] string;
+</PRE><hr>
+
+<p>Note that we could also, instead of writing this :
+
+<hr><PRE>
+  nom1 = "Marc";
+</PRE><hr>
+
+<p>write this :
+
+<hr><PRE>
+  nom1 = {'M', 'a', 'r', 'c'};
+</PRE><hr>
+
+<p>One thing is cumbersome, we can copy in 'nom1' only 4-character strings.
+<p>If you try this you will get an error :</p>
+
+<hr><PRE>
+  nom1 = "Luc";    // <-- ERROR
+</PRE><hr>
+
+<p>Of course you could copy Luc in the first 3 characters and nul in the 4th,
+which will display Luc correctly because printf() stops at the nul character :
+
+<hr><PRE>
+  nom1 = {'L', 'u', 'c', nul};    // OK
+</PRE><hr>
+
+<p>or you could insert the nul character in the constant string, like this :
+
+<hr><PRE>
+  nom1 = "Luc\0";     // OK
+</PRE><hr>
+
+<p>But all of this is not really practical.
+<p>So, how could we manipulate character strings more easily ?
+
+<br><br><br>
+
+<H3>7.2 component 'strings'</H3>
+
+<p>In fact we will use the component "strings" which contains some very useful functions :
+
+<p>The function strcpy() copies a string in another string
+and fills the non-used part with a "nul" character of value zero.
+
+<p>The function sprintf() is used like printf(), except that instead of displaying the result
+on the console it will copy it in the first string.
+Note that the keyword "out" must always be prefixed to the variable that receives a result.
+</p>
+
+<hr><PRE>
+// str2.c
+
+from std use console, strings;
+
+void main()
+{
+  char nom[64], prenom[64], nom_complet[128];
+
+  strcpy (out prenom, "Lucien");
+  strcpy (out nom,    "Demoitier");
+
+  sprintf (out nom_complet, "%s %s", prenom, nom);
+
+  printf ("Mon nom est : %s\n", nom_complet);
+}
+</PRE><hr>
+
+<p>which displays :
+
+<hr><PRE>
+Mon nom est : Lucien Demoitier
+</PRE><hr>
+
+<p>The function strcat() will concatenate a string at the end of another string.
+Note that you need to specify the keyword "ref" in front of the first string
+because this variable is "modified" :
+
+<hr><PRE>
+// str3.c
+
+from std use console, strings;
+
+void main()
+{
+  char str[1000];
+
+  strcpy (out str, "Bonjour ");
+  strcat (ref str, " je ");
+  strcat (ref str, " m'appelle ");
+  strcat (ref str, " Lucien ");
+  strcat (ref str, " Demoitier ");
+
+  printf ("%s\n", str);
+}
+</PRE><hr>
+
+<p>which displays :
+
+<hr><PRE>
+Bonjour  je  m'appelle  Lucien  Demoitier
+</PRE><hr>
+
+<br>
+
+<p>The function sscanf() does the reverse operation than sprintf() :
+It examines a string and extracts its various fields.
+Here the format indicates 4 fields (%*s %d %*s %d),
+we ask it to ignore fields with a  * and to copy the two numeric fields in a and b.
+
+<hr><PRE>
+// str4.c
+
+from std use console, strings;
+
+void main()
+{
+  char str[1000];
+  int    a, b;
+
+  strcpy (out str, "valeurs 12 et 18");
+
+  sscanf (str, "%*s %d %*s %d", out a, out b);
+
+  printf ("%d et %d\n", a, b);
+}
+</PRE><hr>
+
+<p>which displays :
+
+<hr><PRE>
+12 et 18
+</PRE><hr>
+
+<br>
+
+<p>In the example below we declared a constant (thanks to the keyword const).
+A constant is similar to a variable, except that its value does never change.
+If you often use the same string it's interesting to declare it only once as constant.
+
+<hr>
+<PRE>
+// str5.c
+
+from std use console;
+
+void main()
+{
+  const string TITLE = "Hi friends !";
+  printf ("%s\n", TITLE);
+}
+</PRE>
+<hr>
+
+<br>
+
+<p>The following example shows that we can display a slice of a string.
+Here it will display "njo" since we start at index 2 and we display 3 characters :
+
+<hr>
+<PRE>
+// str6.c
+
+from std use console, strings;
+
+void main()
+{
+  char str[1000];
+
+  strcpy (out str, "Bonjour");
+
+  printf ("%s\n", str[2:3]);
+}
+</PRE>
+<hr>
+
+<br>
+
+<p>The function strlen() computes the length of a string til reaching the filling nul character or until the end of the array.
+Here the programme will display 7 :
+
+<hr>
+<PRE>
+// str7.c
+
+from std use console, strings;
+
+void main()
+{
+  char str[1000];
+
+  strcpy (out str, "Bonjour");
+
+  printf ("le string a la longueur : %d\n", strlen(str));
+}
+</PRE>
+
+<hr>
+
+
+<H2>Chapter 8 : constants, variables, typedef and ref</H2>
+
+<br>
+<H3>8.1 constants</H3>
+
+<p>A constant is declared with the keyword <b>const</b>.
+It is used to give a name to a value that doesn't change.
+<p>It is good style to write constants in upper case.
+<p>Here are some examples of constants of different simple, array and struct types :
+
+<hr>
+<PRE>
+  const int     MAX     = 45 * 100;
+  const char    CARET   = '^';
+  const string  WELCOME = "Hello " + " people" + "\n";
+  const char[2] CRLF    = (char)13 + (char)10;
+  const int^    NULL    = null;
+  
+  struct PRODUCT
+  {
+    char[4] code;
+    float   value;
+  }
+  
+  const PRODUCT prod1 = {"ABCD", 1.34};
+  const PRODUCT prod2 = {code => "ABCD", value => 1.34};
+  
+  const PRODUCT[] prod_table = {{code => "AAAA", value => 1.31},
+                                {code => "BBBB", value => 1.32},
+                                {code => "CCCC", value => 1.33},
+                                {code => "DDDD", value => 1.34}};
+</PRE>
+<hr>
+
+<br><br>
+
+<H3>8.2 jagged types</H3>
+
+<p>Usually you specify a length when you declare an array inside a structure.
+<p>There is an exception to this rule : when you declare a constant,
+ you can specify an array without length indication.
+
+<p>Here is an example, the structure INFO below is a "jagged structure" :
+
+<hr>
+<PRE>
+  from std use console;
+  
+  struct INFO
+  {
+    char[] code;   // an array of char without length is allowed here
+    float  value;
+  }
+
+  const INFO info1 = {"bananas", 12.5};
+  const INFO info2[] = {{"melon",   8.6}, 
+                        info1,
+                        {"apple", 120.4}}; 
+                        
+  void main()
+  {
+    int i;
+    for (i=0; i&lt;info2'length; i++)
+      printf ("%-10s %6.1f\n", info2[i].code, info2[i].value);
+  }  
+</PRE>
+<hr>
+
+<p>which displays :
+
+<hr>
+<PRE>
+melon         8.6
+bananas      12.5
+apple       120.4
+</PRE>
+<hr>
+                        
+<p>Note that the struct INFO here above cannot be used to declare variables.
+You can use it only to declare constants, parameters of mode IN, or references to these.
+
+<p>In a "jagged" structure you can also declare variant structures
+without giving a value for the discriminant parameter.
+
+<br><br><br>
+
+<H3>8.3 syntax of constant literals</H3>
+
+<PRE>
+Integer Number
+--------------
+An integer number can have a decimal, hexadecimal or binary form.
+
+Examples:
+  64           // compatible with any integer number, signed or unsigned
+  65_000_000   // with underline for better readability
+  0xFF         // hexadecimal value
+  0b1111_0000  // binary value
+  176L         // long
+
+The underline character (_) is allowed in an integer number for a better readability.
+
+The most negative value (-2^63) is not representable by an integer literal,
+you can use instead the expression long'min.
+
+If the literal has an L suffix, it has type 'long'.
+
+
+Floating-Point Number
+---------------------
+A floating-point number can have type float or double.
+
+Examples:
+  1.2f
+  3.023_223E+2d
+  0x80.0p-1
+
+A suffix "f" indicates a  type 'float', a suffix "d" indicates a type 'double'.
+If no suffix is present, the type is determined by the context where the number appears.
+
+A hexadecimal number (with prefix 0x) is used for a precise machine representation :
+the mantissa is then specified in base 16 and the exponent is specified in base 10.
+
+
+Character Literal
+-----------------
+A character literal is a constant of type char (or of type wchar if it has a prefix 'L').
+
+Examples:
+  'A'
+  'É'
+  '\N'
+  '\x80'    // code 80 hexa
+  L'\x00FF' // code FF hexa (prefix 'L' indicates a type wchar)
+
+The following escape sequences are supported :
+
+  \' 0x0027 Single quote
+  \" 0x0022 Double quote
+  \\ 0x005C Backslash
+  \0 0x0000 Null
+  \a 0x0007 Alert
+  \b 0x0008 Backspace
+  \f 0x000C Form feed
+  \n 0x000A New line
+  \r 0x000D Carriage return
+  \t 0x0009 Horizontal tab
+  \v 0x000B Vertical tab
+
+  
+String Literal
+--------------
+A string literal is a constant of type string (or of type wstring if it has a prefix 'L').
+
+Examples:
+  "A"
+  "Hello\n"
+  "Hello" + " World"
+  L"Hallöchen"
+  L"\x1234"
+
+String literals of more than 128 characters cause a compiler error.
+Longer string literals can be built using the concatenation operator '+'.
+</PRE>
+
+<br>
+
+<H3>8.4 variables</H3>
+
+<p>A variable is a name given to a memory location that will contain a value of a given type.
+
+<p>Here are some examples:
+<hr>
+<PRE>
+  int        count, i=0;
+  char[10]   c;
+  string(80) buffer;
+  PRODUCT[]^ ptr = new PRODUCT[nb];
+</PRE>
+<hr>
+
+<p>Variables can be declared at different places :
+
+<ol>
+<li><H4>local variable</H4>
+
+We call <b>local variable</b> a variable declared within a function body or within an instruction block.
+
+<p>Such a variable is created when the function is called, and it disappears when the function ends.
+Furthermore, if a function is called several times recursively, several distinct occurences of the variable
+will co-exist.</p>
+
+<li><H4>global variable</H4>
+
+<p>A <b>global variable</b> is declared, either in an .h file, or at the start of a .c file
+(after the <b>use</b> clauses but before any function body declaration).
+
+<p>If it is declared in a .h file it will be available to all program parts that import the .h component
+with a <b>use</b> clause.
+
+<p>A <b>global variable</b> is created at program start and it disappears when the program ends.
+Its disadvantage, compared to a local variable, is that it occupies memory during the whole time the program runs.
+</p>
+
+<li><H4>dynamic variable</H4>
+
+<p>A <b>dynamic variable</b> is allocated through the allocator <b>new</b> and its memory address
+will be stored in a pointer variable.
+
+<p>It exists as long as its memory was not deallocated with the instruction <b>free</b>.
+
+</ol>
+
+<br>
+<p>A global variable must be declared before any function body declarations, for readability reasons.
+<p>This will cause an error :
+
+<hr>
+<PRE>
+  void treat()
+  {
+  }
+  
+  int i;    // <-- incorrect
+  
+  void main()
+  {
+  }
+</PRE>
+<hr>
+
+<br>
+<p>Indeed, the correct declaration order is :
+<br>
+
+<hr>
+<PRE>
+  int i;    // <-- correct
+  
+  void treat()
+  {
+  }
+  
+  void main()
+  {
+  }
+</PRE>
+<hr>
+
+<p>However, if you wish to declare the variable between two function bodies anyway,
+there exists a trick : you can declare a package enclosing the declaration, like this :
+
+<hr>
+<PRE>
+  void treat()
+  {
+  }
+  
+  package MY_VARIABLES
+    int i;    // <-- correct
+  end MY_VARIABLES;
+  
+  void main()
+  {
+  }
+</PRE>
+<hr>
+
+<br><br>
+
+<H3>8.5 type declaration</H3>
+
+<p>The keyword <b>typedef</b> is used to give a name to a type.
+
+<p>Examples:
+
+<hr>
+<PRE>
+  typedef char[]   MYSTRING;      // type array without length
+  typedef char[10] NAME;          // type array
+  typedef byte[]^  POINTEUR;      // type pointer to array
+
+  MYSTRING str(100);
+  NAME     name;
+  POINTEUR p;
+</PRE>
+<hr>
+
+<br>
+
+<p><b>typedef</b> is also used to declare a type-to-function,
+which allows indirect function calls.
+
+<p>Here is an example:
+
+<hr>
+<PRE>
+  from std use console;
+    
+  typedef void TREAT (int nr);    // type pointer to function
+
+  void A (int i)
+  {
+    printf ("A : %d\n", i);
+  }
+  
+  void B (int i)
+  {
+    printf ("B : %d\n", i);
+  }
+  
+  void main ()
+  {
+    TREAT treat;         // variable of type 'pointer to function'
+    
+    treat = A;           // the variable receives the address of function A
+    treat (nr => 100);   // indirect call of function A()
+    
+    treat = B;           // the variable receives the address of function B
+    treat (nr => 200);   // indirect call of function B()
+  }
+</PRE>
+<hr>
+
+<p>which displays :
+
+<hr>
+<PRE>
+A : 100
+B : 200
+</PRE>
+<hr>
+
+<p>
+  
+<br>
+
+<H3>8.6 reference declaration</H3>
+
+<p>A reference is used to give a synonym name to a variable or a parameter.
+
+<p>For example, imagine you have the following program :
+
+<hr>
+<PRE>
+  struct STUDENT
+  {
+    int  nr;
+    int  birth;
+    char grade;
+    bool passed;
+  }
+  
+  STUDENT student[100];
+  
+  void main()
+  {
+    int i = 5;
+    
+    student[i].nr    = 5;
+    student[i].birth = 1967;
+    student[i].grade = 'F';
+    student[i].passed = (student[i].grade &lt;= 'C');
+  }
+</PRE>
+<hr>
+
+<p>This program can be improved.
+Indeed, it repeats 4 times <b>student[i]</b> which requires 4 evaluations of the index <b>[i]</b>.
+<p>Here is another version using a reference that only evaluates <b>[i]</b> once :
+
+<hr>
+<PRE>
+  struct STUDENT
+  {
+    int  nr;
+    int  birth;
+    char grade;
+    bool passed;
+  }
+  
+  STUDENT student[100];
+  
+  void main()
+  {
+    int i = 5;
+
+    {
+      ref STUDENT s = student[i];
+      s.nr     = 5;
+      s.birth  = 1967;
+      s.grade  = 'F';
+      s.passed = (s.grade &lt;= 'C');
+    }
+  }
+</PRE>
+<hr>
+
+<p>Don't forget the keyword <b>ref</b> otherwise you would simply declare a new variable.
+Here <b>s</b> is really a synonym of <b>student[i]</b>.
+
+<p>Here are other examples :
+
+<hr>
+<PRE>
+  ref char   ch    = buffer[i];     // reference to array element
+  ref string str   = buffer[0:3];   // reference to array slice
+  ref int    age   = student.age;   // reference to age field
+</PRE>
+<hr>
+
+<br>
+<p>There is a catch when you use references of a pointer.
+During the time the reference is active it will lock the dynamic variable designated by the pointer
+so that you cannot deallocate it with free.
+
+<p>Example:
+
+<hr>
+<PRE>
+  void main()
+  {
+    char[]^ buffer = new char[5];  // allocation of 5 characters
+
+    ref char[] table = buffer^;    // table is a reference to buffer^
+
+    table = "Hello";               // copy a value to the table
+
+    free buffer;                   // free the buffer
+  }
+</PRE>
+<hr>
+
+<p>The above program will crash on the instruction <b>free</b> because the reference will lock <b>buffer</b>.
+<p>The correct way to avoid this problem is to invoke <b>free</b> when the reference is not active anymore,
+by enclosing the reference in an instruction block like this :
+
+<hr>
+<PRE>
+  void main()
+  {
+    char[]^ buffer = new char[5];  // allocation of 5 characters
+
+    {
+      ref char[] table = buffer^;  // table is a reference to buffer^
+      table = "Hello";             // copy a value to the table
+    }
+
+    free buffer;                   // free the buffer
+  }
+</PRE>
+
+<hr>
+
+<H2>Chapter 9 : arithmetic computations and conversions</H2>
+
+<br>
+<H3>9.1 numeric operators</H3>
+
+<PRE>
+ Operator       Symbol    number of CPU cycles
+ ===========    =======   ====================
+ Add             +             1 µsec
+ Subtract        -             1 µsec
+ Multiply        *             4 µsec
+ Divide          /            40 µsec
+ Rest Division   %            40 µsec
+ Shift Left      <<            1 µsec
+ Shift Right     >>            1 µsec
+</PRE>
+
+<p>In addition of being used on integers and floats, the operators "+" and "-"
+can also be used to add or subtract an integer from an enumeration type. Example:
+
+<PRE>
+  enum COLOR {BLUE, RED, GREEN};
+  COLOR col = BLUE + 2;     // GREEN
+  printf ("col = %s\n", col'string);
+</PRE>
+
+<p>The operators / (division) and % (rest of division)
+cause a program crash if the right argument equals zero.
+Note that the operator % only works on integers.
+
+<p>The shift operators allows a very fast multiply or divide by a power of two.
+For example, instead of dividing by 64 with "a/64", you can shift by 6 with "a>>6" because
+2 power 6 yields 64. When your program must go very very fast the shift is interesting because
+the division operation is about 40 times slower than a shift on current processors.
+
+<PRE>
+  int a = 2;
+  int b = (a * (a + 1)) >> 1;
+</PRE>
+
+
+<br>
+
+<H3>9.2 Incrementation and decrementation operators</H3>
+
+<PRE>
+ Operator        Symbol
+ ===========     ======
+ Add 1            ++
+ Subtract 1       --
+</PRE>
+
+<p>The incrementation operator "++" adds one to a variable and evaluates it at the same time.
+The operator can be placed before or after the variable, which has a different effect on the
+evaluation : if it is placed before, the evaluation returns the value after incrementation,
+otherwise it returns the value before incrementation. Example:
+
+<PRE>
+ int i = 0;
+ int j = ++i;  // j == 1, i == 1
+</PRE>
+
+<p>tandis que :
+
+<PRE>
+ int i = 0;
+ int j = i++;  // j == 0, i == 1
+</PRE>
+
+<br>
+
+<H3>9.3 Concatenation operator</H3>
+
+<PRE>
+ Operator       Symbol
+ ===========    ======
+ concat           +
+</PRE>
+
+<p>The operator "+" can concatenate constants of type string or wstring. Example:
+
+<PRE>
+  const string WELCOME = "Welcome to " + "Safe-C programming\n";
+  const string WELCOME2 = WELCOME + "We hope you have a nice day\n";
+</PRE>
+
+<br>
+
+<H3>9.4 bitmask operators</H3>
+
+<PRE>
+ Operator                  Symbol
+ ===========               ======
+ logical AND                  &
+ logical OR                   |
+ exclusive OR                 ^
+ Inversion                    ~
+</PRE>
+
+<p>These operators work bit per bit on the binary representation of values.<br>
+The logical AND yields a bit 1 only if both values have a bit of value 1.<br>
+The logical OR yields a bit 1 only if at least one value has a bit of value 1.<br>
+The exclusive OR yields a bit 1 only if one value has a bit of value 1 but not the other one.<br>
+The inversion takes a single argument and inverts all 1 bits to 0, and 0 to 1.<br>
+
+
+<PRE>
+  int i = 17 & 3;   // 1
+
+  17 :   10001
+   3 :   00011
+  ------------
+   1     00001
+</PRE>
+
+<br>
+
+<H3>9.5 comparison operators</H3>
+
+<PRE>
+ Operator                   Symbol
+ ===========                ======
+ smaller than                 <
+ smaller than or equal to     <=
+ larger than                  >
+ larger than or equal to      >=
+ equal to                     ==
+ not equal to                 !=
+ not                          !
+</PRE>
+
+<p>The comparison operators will compare two numeric or enumeration values.
+The result is a value of type bool, true or false.
+
+<PRE>
+  int  i = 2;
+  int  j = 3;
+  bool b = i <= j;   // true
+</PRE>
+
+<p>The operator "!" takes a single right boolean argument and inverses the values false and true.<br>
+
+<PRE>
+  bool b = !(i <= j);   // false
+</PRE>
+
+<p>The operators "==" and "!=" can compare pointers too.
+
+<PRE>
+  if (p != null)
+</PRE>
+
+<br>
+
+<H3>9.6 boolean operators</H3>
+
+<PRE>
+ Operator            Symbol
+ ========            ======
+ AND                  &&
+ OR                   ||
+ exclusive OR         ^
+</PRE>
+
+<p>Boolean operators are used to test several conditions at once.<br>
+
+<PRE>
+  if (a == 2 && b == 3)   // both must be true
+  if (a == 2 || b == 3)   // at least one of both must be true
+  if (a == 2 ^ b == 3)    // one must be true, but not both
+</PRE>
+
+<p>Please note that you can also combine several identical boolean operators :
+
+<PRE>
+  if (a == 2 && b == 3 && c == 4 && d == 5)
+</PRE>
+
+<p>however, if the operators are different you need some parenthesis to remove ambiguities :
+
+<PRE>
+  if ((a == 2 && b == 3) || (c == 4 && d == 5))
+</PRE>
+
+<p>Contrarily to all other operators, the operators && and || evaluate their right-hand argument only
+if necessary. This is useful to avoid divisions by zero.
+
+<PRE>
+  if (den == 0 || num/den > limit)   // num/den is evaluated only if den is not zero
+    ...
+  if (den != 0 && num/den > limit)   // num/den is evaluated only if den is not zero
+    ...
+</PRE>
+
+
+<H3>9.7 conditional value</H3>
+
+<p>The operator "? :" is used to test a condition and to return a value if it's true, and another if it's false.
+
+Example : <br>
+<PRE>
+  average = (count != 0) ? sum/count : 0;
+</PRE>
+
+<p>This example stores in average the value 'sum/count' if count is not zero, otherwise it stores zero.
+
+<br><br>
+
+<H3>9.8 Priorities</H3>
+
+<p>Operators are not always executed from left to right.
+In the following example, the multiply is executed before the add,
+which means the result is 14, and not 20.
+
+<PRE>
+  int i = 2 + 3 * 4;      // == 14
+</PRE>
+
+<p>If you want the add to be executed first, you need to use parenthesis, like this :
+
+<PRE>
+  int i = (2 + 3) * 4;    // == 20
+</PRE>
+
+<p>Operators have the following evaluation priorities :
+
+<PRE>
+  priority of operators
+  ---------------------
+  Unary                +   -  !  ~  --  ++
+  Term                 *   /  %
+  Sum                  +   -
+  Simple Expression    <<  >>
+  Relation             ==  !=  <  >  <=  >=
+  Condition            &&  ||  &  |  ^
+  Conditionnel Test    ?  :
+</PRE>
+
+<br>
+
+<H3>9.9 Conversions</H3>
+
+<p>Safe-C does not allow mixing signed (int) and unsigned (uint) types.
+Consequently, if you want to add a signed and an unsigned type values
+you need to convert one of them first.
+
+<PRE>
+  int  i, j;
+  uint u;
+
+  i = 2;
+  u = 34;
+
+  j = i + (int)u;    // conversion of u to type int
+  u = (uint)j;       // conversion of j to type uint
+</PRE>
+
+<p>If you use the small types int1 or int2 to store a result of a computation, you will need
+to convert the result first.
+
+<PRE>
+  int  a, b;
+  int1 i;
+
+  a = 34;
+  b = 12;
+
+  i = (int1)(a + b);   // conversion to the type int1
+</PRE>
+
+<p>If you use the small type float to store a value of type double, you need to convert it first :
+
+<PRE>
+  float f;
+  f = (float)sin(angle);
+</PRE>
+
+<p>If you need to convert a bool into int, you can convert it. The result will equal 0 or 1.
+
+<PRE>
+  int i;
+  i = (int)(a < b);   // result 0 or 1
+</PRE>
+
+<p>If you need to convert a type char into int, you can convert it :
+
+<PRE>
+  char c = 'A';
+  int  i;
+  i = (int)c;
+</PRE>
+
+
+<p>If you want to convert a type float to type int, you can convert it.
+The result will be truncated.
+You can use the functions floor(), round() or ceil() from component math for different roundings.
+
+<PRE>
+  float f = 3.1415;
+  int   i;
+
+  i = (int)f;           // trunc (remove fractionary part)
+  i = (int)floor(f);    // round down (towards most negative)
+  i = (int)round(f);    // round to nearest integer
+  i = (int)ceil(f);     // round up (towards most positive)
+</PRE>
+
+<br>
+
+<H3>9.10 combined assignations</H3>
+
+<p>The following assignations can be combined with an operator.
+Here are some examples and their equivalents :
+
+<PRE>
+  int i = 1;
+
+  i += 2;   // i = i + 2;
+  i -= 3;   // i = i - 3;
+  i *= 4;   // i = i * 4;
+  i &= 1;   // i = i & 1;
+  i <<= 1;  // i = i << 1;
+</PRE>
+
+
+<br>
+
+<hr>
+
+
+<H2>Chapter 10 : instructions and blocks</H2>
+
+<br>
+<H3>10.1 clear</H3>
+
+<p>The instruction clear will erase one or more variables, thus put the value zero in them.
+
+<hr>
+<PRE>
+  int   i, j;
+  float f;
+  
+  clear i, j, f;   // i = 0; j = 0; f = 0.0;
+</PRE>
+<hr>
+
+<br>
+<H3>10.2 assignation</H3>
+
+<p>The assignation instruction "=" will compute the right-hand expression and copy it into the left-hand variable.
+
+<hr>
+<PRE>
+  int     i, j, k[2];
+  float   f;
+  char[3] tar;
+  
+  i = 2;
+  j = i * 2 + 345;
+  f = (float)j * 3.1415927;
+  k = {i, j};
+  tar = "ABC";
+</PRE>
+<hr>
+
+<p>The combined assignation is an abbreviated form that is available for the following operators :<br>
+
+<PRE>
+       +=  -=  *=  /=  %=  <<=  >>=  &=  |=  ^= 
+</PRE>
+
+<hr>
+<PRE>
+  int j = 2;
+  j += 3;   // j = j + 3;
+</PRE>
+<hr>
+
+<br>
+<H3>10.3 incrementation or decrementation</H3>
+
+To add or subtract one to an integer or enumeration variable, one the following abbreviations can be used :
+
+<hr>
+<PRE>
+  i++;    // i = i + 1;
+  ++i;    // i = i + 1;
+  
+  i--;    // i = i - 1;
+  --i;    // i = i - 1;
+</PRE>
+<hr>
+
+
+<br>
+<H3>10.4 function call</H3>
+
+A function call is indicated by a name following by a list of arguments in parenthesis.
+If there are no arguments we use only an empty pair of parenthesis.
+
+<hr>
+<PRE>
+  t = ticks();         // no parameters
+  printf ("Hello");
+  rc = fcreate (out file, "file.txt", ANSI);
+</PRE>
+<hr>
+
+<p>There are 3 modes for parameter passing : IN, REF et OUT.
+
+<p>Mode IN is used by default when no keyword is specified : it passes the computed value to the function.
+<p>Mode REF indicates we pass a variable to the function which can possibly be modified.
+<p>Mode OUT means the function will return us a result in this variable. Contrarily to the two other modes,
+it is not necessary to initialize the variable before the call.
+
+<hr>
+<PRE>
+  int value1 = 1;
+  char table2[10];
+  int result3;
+  
+  clear table2;
+  my_function (value1, ref table2, out result3);
+</PRE>
+<hr>
+
+<p>Note that the keyword "in" does not exist. When you wish to use mode IN you specify no mode at all.
+
+<p>To make function calls clearer, you can specify parameter names followed by an arrow "=>" :
+
+<hr>
+<PRE>
+  i = strstr (text => "WiZZ", fragment => "i");
+  
+  init_draw (out dc     => my_dc,
+                 buffer => buf,
+                 width  => 100,
+                 height => 200);
+</PRE>
+<hr>
+
+<p>A function can have a default value for its last parameters. They are then optional.
+
+<hr>
+<PRE>
+    void put_int (int value, int base = 10);
+
+    put_int (i, base => 16);
+    put_int (i);                 // assumes base 10
+</PRE>
+<hr>
+
+<br>
+<H3>10.5 return</H3>
+
+<p>The instruction "return" ends a function and possibly returns a result.
+You can only return simple values, that means no arrays and no structs.
+
+<hr>
+<PRE>
+  int sum (int a, int b)
+  {
+    return a + b;
+  }
+
+  void proceed (int f)
+  {
+    if (f == 2)
+      return;
+    // ...
+  }
+</PRE>
+<hr>
+
+
+<br>
+<H3>10.6 block</H3>
+
+<p>A block instruction groups a series of instructions.
+The instructions if, while and for need either one instruction, or a block.
+At the beginning of a block you can declare variables
+that are only available within the block.
+
+<hr>
+<PRE>
+  {        // block instruction
+    int i;
+    H();
+    I();
+  }
+</PRE>
+<hr>
+
+
+<br>
+<H3>10.7 if</H3>
+<p>The if instruction allows conditional execution.
+
+<hr>
+<PRE>
+   if (b)
+   {
+     // ...
+   }
+
+   if (b)
+     ;       // ; is an empty instruction
+   else
+     ;
+</PRE>
+<hr>
+
+<br>
+<H3>10.8 switch</H3>
+<p>The instruction switch allows conditional execution with several branches.
+
+<hr>
+<PRE>
+  switch (i)
+  {
+    case -1:    // when i equals -1
+      f();
+      break;
+
+    case 1:     // when i equals 1
+      g();
+      break;
+
+    default:    // default branch when none of the values match
+      break;
+  }
+</PRE>
+<hr>
+
+<br>
+<H3>10.9 while</H3>
+<p>The instruction 'while' allows the repetition of instructions as long as a condition is true.
+
+<hr>
+<PRE>
+  compteur = 0;
+  
+  while (compteur &lt; 10)
+    compteur++;
+    
+  while (compteur &lt; 20)
+  {
+    printf ("compteur = %d\n", compteur);
+    compteur++;
+  }
+</PRE>
+<hr>
+
+<br>
+<H3>10.10 for</H3>
+<p>The instruction 'for' is a more compact form than the instruction 'while'.
+<p>It is composed of 3 parts separated by two semicolons.
+The first part is only executed once,
+the second is a condition that is tested before each loop iteration to see if we continue to loop,
+and the third is executed after the instruction to repeat, at the end of each loop.
+<p>Parts 1 and 3 can be empty or contain several instructions separated by commas.
+<p>When part 2 is empty then the instructions will loop forever (except if there's a break or a return in the loop).
+
+<hr>
+<PRE>
+  for (compteur=0; compteur&lt;10; compteur++)
+    ;
+    
+  for (i=0; i&lt;arg'length; i++)
+    printf ("arg %d : %s\n", i, arg[i]);
+
+  for ( ; p!=null; i++,j+=3,p=p^.next)
+    ;
+
+  for (;;)   // infinite loop
+    ;
+</PRE>
+<hr>
+
+
+<br>
+<H3>10.11 break</H3>
+<p>The instruction 'break' is used to exit the most intern enclosing 'while', 'for' or 'switch' instruction.
+
+<hr>
+<PRE>
+   for (i=0; i&lt;10; i++)
+   {
+     if (i == j)
+       break;
+   }
+</PRE>
+<hr>
+
+
+<br>
+<H3>10.12 continue</H3>
+<p>The instruction 'continue' is used to skip to the next iteration of a 'while' or 'for' instruction.
+
+<hr>
+<PRE>
+   for (i=0; i&lt;10; i++)
+   {
+     if (i == j)   // skip j
+       continue;
+     printf ("i = %d\n", i);
+   }
+</PRE>
+<hr>
+
+
+<br>
+<H3>10.13 free</H3>
+<p>The instruction 'free' deallocates the dynamic object designated by a pointer.
+
+<hr>
+<PRE>
+  free p;
+  free null;
+  free f();
+</PRE>
+<hr>
+
+<p>Freeing a null pointer has no effect.
+
+<p>An exception will occur if the heap object is still referenced by a reference or a parameter,
+or if it was already freed before.
+
+<br>
+
+<br>
+<H3>10.14 assert</H3>
+<p>The instruction 'assert' triggers a program stop if a condition is false.
+
+<hr>
+<PRE>
+  assert TABLE_SIZE%2 == 0;  // TABLE_SIZE doit être divisible par deux
+</PRE>
+<hr>
+
+
+<br>
+<H3>10.15 abort</H3>
+<p>An instruction 'abort' stops the program.
+
+<hr>
+<PRE>
+    switch (reponse)
+    {
+      case 'Y':
+        printf ("yes");
+        break;
+
+      case 'N':
+        printf ("no");
+        break;
+
+      default:
+        abort;   // should never occur
+    }
+</PRE>
+<hr>
+
+<br>
+
+<br>
+<H3>10.16 sleep</H3>
+<p>The instruction 'sleep' suspends the program for a specified duration, in seconds.
+
+<hr>
+<PRE>
+  sleep 10;   // wait 10 seconds
+  sleep 1.5;  // wait 1.5 seconds
+  sleep 0;    // skip current time slice for this thread
+</PRE>
+<hr>
+
+<p>The expression must have an integer or a float type.
+Durations of more than 86400 seconds (a day) or smaller than -86400 seconds
+are not valid. Negative durations are equivalent to zero.
+
+<br>
+<br>
+<H3>10.17 code</H3>
+
+<p>The instruction 'code' insert machine code directly into the program.
+<p>It is only allowed in an unsafe section.
+<hr>
+<PRE>
+  #begin unsafe
+  _asm {0xC2 0x08 0x00};   // ret 8
+  #end unsafe
+</PRE>
+<hr>
+
+
+<br>
+<H3>10.18 _unused</H3>
+
+<p>The instruction '_unused' removes the warning message saying a variable or parameter is unused.
+
+<hr>
+<PRE>
+   _unused par1;
+</PRE>
+<hr>
+
+
+<br>
+<H3>10.19 Run</H3>
+
+<p>The instruction "run" is used to start a thread which will execute in parallel with your program.
+The parameters of the thread function are limited to a single parameter of type int.
+
+<hr>
+<PRE>
+  from std use console;
+
+  void my_thread (int nr)
+  {
+    printf ("this is my_thread %d\n", nr);
+  }
+
+  void main()
+  {
+    int rc;
+    rc = run my_thread (1);    // rc == 0 if the thread started well.
+    rc = run my_thread (2);    // rc == 0 if the thread started well.
+    rc = run my_thread (3);    // rc == 0 if the thread started well.
+    printf ("this is main\n");
+    sleep 1.0;
+  }
+</PRE>
+<hr>
+  
+<p>which displays :
+
+<hr><PRE>
+this is main
+this is my_thread 2
+this is my_thread 1
+this is my_thread 3
+</PRE> 
+
+<hr>
+
+
+<H2>Chapter 11 : functions, parameters, main and recursivity</H2>
+
+<br>
+<H3>11.1 function declaration</H3>
+
+<p>A function declaration details the parameters, return value and options of a function.
+
+<hr>
+<PRE>
+  int start_treatment ();
+  int treat (string name, char option);
+  void sum (int a, int b, out c);
+  void operate (ref TABLE table);
+  void print (int value, int width = 1);
+</PRE>
+<hr>
+
+<p>There are 3 modes for passing parameters :
+
+<PRE>
+  mode direction parameter access
+  ==== ========= ================
+  in      -->     read-only
+  ref     <->     read and write
+  out     <--     write first, then read and write
+</PRE>
+
+<p>Mode "in" is used to pass a value to the function.
+Within the function, a parameter of mode "in" cannot be modified.
+Note that the keyword "in" does not exist, when you wish to specify the mode "in"
+you indicate no mode at all.
+<p>Mode "ref" passes the address of a variable to the function so that it can be changed.
+<p>Mode "out" allows the function to pass a value back from the function.
+Within the function, a parameter of mode "out" is considered as 
+non-initialised; it must receive a value before the function ends.
+
+<PRE>
+  void my_func (int a, ref int b, out c)
+  {
+    a = 1;  // error : a cannot be modified
+  }         // error : c must receive a value
+</PRE>
+
+<p>Internally, mode "in" parameters are passed by value for simple values and by address
+for compound values. Mode "ref" and "out" parameters are always passed by address.
+For parameter types "array without length" or "variant struct without discriminant",
+an additional hidden parameter is passed with the array length or the discriminant value.
+This is what allows using the attribute 'length to know the array length inside the function.
+
+<PRE>
+  void my_func2 (string str)
+  {
+    int len = str'length;
+  }
+</PRE>
+
+<p>If a parameter of mode "in" has a default constant value (example: 'width' above),
+then the corresponding parameter is optional during the function call :
+
+<PRE>
+  print (value => 10, width => 2);
+  print (value => 10);              // width == 1 is default
+</PRE>
+
+<p>The return type of a function can be a simple type
+(so array, struct, union, opaque or generic are not allowed),
+or "void" if the function has no parameters :
+
+<PRE>
+  string concat (string a, string b);   // error: return type must be simple type
+</PRE>
+
+<p>The following options exist :
+
+<PRE>
+1) inline
+---------
+  inline int treat (char count);
+
+indicates that the function should be inserted inline instead of being called.
+
+2) callback
+-----------
+  [callback]
+  int MainWin (HWND hwnd, UINT message, WORD w, LONG l);
+
+indicates that the function will be called by the operating system.
+
+3) extern
+---------
+  [extern "KERNEL32.DLL"]
+  int GetStdHandle (int nStdHandle);
+
+indicates that the body of the function is in an extern DLL.
+
+The options callback and extern are only allowed in an unsafe section
+(see unsafe pointers).
+</PRE>
+
+<br>
+
+<H3>11.2 function body</H3>
+
+<p>The body of a function defines its intern working.
+
+<PRE>
+  void sum (int a, int b, out int c)
+  {
+    c = a + b;
+  }
+</PRE>
+
+<p>The prefix "public" is mandatory for a function body if the function
+was predeclared in an .h file with the same name as the .c file :
+
+<hr>
+<PRE>
+  // p.h
+  void sum (int a, int b, out int c);    // declaration
+</PRE>
+<hr>
+<PRE>
+  // p.c
+  public void sum (int a, int b, out int c)   // body with keyword "public"
+  {
+    c = a + b;
+  }
+</PRE>
+<hr>
+
+<p>To use the function sum you will have to import the file p.h using a clause "use p;"
+
+<p>A function having a non-void return type must end with an instruction return or abort.
+
+<br><br>
+
+<br>
+<H3>11.3 function main</H3>
+
+<p>The entry point into a program is a function called 'main'.
+There must only be a single function of this name.
+
+<p>It must have return type void or int. In case of type int, the value is returned
+to the operating system.
+
+<hr>
+<PRE>
+  int main()
+  {
+    return -1;
+  }
+</PRE>
+<hr>
+
+<p>main() must have, either no parameters, or a single parameter of mode 'in' and
+type string [ ] which will receive a string table with all arguments specified at program start.
+The first argument (at index 0) is the program name itself.
+
+<hr>
+<PRE>
+  // prog.c
+  
+  from std use console;
+  
+  void main(string[] par)
+  {
+    int i;
+    for (i=0; i&lt;par'length; i++)
+      printf ("parametre %d : %s\n", i, par[i]);
+  }
+</PRE>
+<hr>
+
+<p>which displays :
+
+<hr>
+<PRE>
+C:\SafeC> prog un deux trois
+parametre 0 : prog
+parametre 1 : un
+parametre 2 : deux
+parametre 3 : trois
+</PRE>
+<hr>
+
+
+<br>
+
+<br>
+<H3>11.4 recursivity</H3>
+
+<p>A function can call itself, which allows recursive calls.
+It is however necessary to limit the depth of the recursion because a too large number of calls
+will cause a program crash. This number depends on the number of local variables declared
+in the function.
+
+<hr>
+<PRE>
+// recursif.c
+
+from std use console;
+
+int factorielle (int i)
+{
+  if (i == 1)
+    return 1;
+  return i * factorielle (i-1);  // the function calls itself here
+}
+
+void main()
+{
+  int n;
+  for (n=1; n&lt;=10; n++)
+    printf ("factorielle(%d) = %d\n", n, factorielle(n));
+}
+</PRE>
+<hr>
+
+<p>with the result:
+
+<hr>
+<PRE>
+factorielle(1) = 1
+factorielle(2) = 2
+factorielle(3) = 6
+factorielle(4) = 24
+factorielle(5) = 120
+factorielle(6) = 720
+factorielle(7) = 5040
+factorielle(8) = 40320
+factorielle(9) = 362880
+factorielle(10) = 3628800
+</PRE>
+
+<hr>
+
+
+<H2>Chapter 12 : compilation units and opaque types</H2>
+
+<br>
+<H3>12.1 compilation units</H3>
+
+<p>A large Safe-C program is composed of multiples files with the extensions .h and .c
+
+<p>.h and .c files always go by pairs, except the main .c file for which the .h file is optional.
+
+<p>A pair of .h and .c files form a "compilation unit" :<br>
+. the .h file will contain the "public" declarations which are usable outside the compilation unit<br>
+. whereas the .c file, which is the "private" part, will contain all function bodies
+and other declarations not visible outside.
+
+<p>The .h files define thus the interfaces between all program parts.
+Here's an example of a .h file :
+
+<hr>
+<PRE>
+// plotter.h
+
+struct POINT
+{
+  float x, y;
+}
+
+const POINT ORIGIN = {x => 0.0, y => 0.0};
+
+void move (POINT from, POINT to);
+</PRE>
+<hr>
+
+<p>The interface plotter.h declares a structure POINT, a constant ORIGIN and a function move
+that can be used by a program p.c like this :
+
+<hr>
+<PRE>
+// p.c
+
+use plotter;
+
+void main()
+{
+  move (ORIGIN,     {1.0, 2.0});
+  move ({1.0, 2.0}, {2.0, 4.0});
+  move ({2.0, 4.0}, ORIGIN);
+}
+</PRE>
+<hr>
+
+<p>The clause "use plotter;" at the start of the program will import the file plotter.h so you can
+use its declarations. Note that if plotter.h and .c are elsewhere on the disk,
+you would have to provide the relative path to find them.
+For example if they are located in the sub-folder "hardware" :
+
+<PRE>
+use hardware/plotter;
+</PRE>
+
+<p>What does plotter.c, the private part, look like ?
+Well it will contain all kinds of functions to make a plotter work,
+but it will certainly contain a body for the function move().
+As function move() is declared in the .h, the keyword "public" is mandatory for the .c :
+
+<hr>
+<PRE>
+// plotter.c
+
+void plot (POINT p)
+{
+  ...
+}
+
+public void move (POINT from, POINT to)  // <-- mandatory keyword "public"
+{
+  POINT p;
+  p = from;
+  while (p.x < to.x)
+  {
+    plot (p);
+    p.x += 0.1;
+  }
+  // ...
+}
+</PRE>
+<hr>
+
+<br>
+<H3>12.2 opaque types</H3>
+
+<p>In some cases, we wish to declare a structure in the .h
+but we don't want the fields of the structure to be visible on the outside.
+We will then use an opaque type.
+<p>For example, the library component file.h declares a structure FILE like this:
+
+<hr>
+<PRE>
+// files.h
+
+struct FILE;   // this is an OPAQUE type because we don't specify any fields
+
+int fopen (out FILE file, string filename);
+</PRE>
+<hr>
+
+<p>Users of file.h won't be able to do much with type FILE,
+except declaring variables of that type, erase them with a clear, and pass these
+variables in the functions declared in file.h, like fopen().
+In particular, they won't be able to take a copy of the variable.
+
+<p>Of course, the structure FILE will be re-declared a second time in the .c file,
+but this time with all fields that will be accessible only in the .c.
+
+<hr>
+<PRE>
+// file.c
+
+struct FILE
+{
+  int      h;             // windows handle (<=0 means closed file)
+  int      error;         // error code from last fill_buffer or flush_buffer
+  ENCODING coding;
+  bool     is_write;      // false=read, true=write
+  bool     last_chunk_read;
+  bool     look_ahead_encoding_full;
+  wchar    look_ahead_encoding;
+  bool     look_ahead_crlf_full;
+  wchar    look_ahead_crlf;
+  bool     unget_full;
+  wchar    unget_char;
+  bool     put_char_full;
+  wchar    put_char;
+  int      len;           // index of buffer for reading from o.s. (not used for write)
+  int      ofs;           // read or write index into buffer
+  byte     buffer[16*1024];
+}
+</PRE>
+<hr>
+
+
+<br>
+<H3>12.3 how to properly divide a program in pieces</H3>
+
+<p>There are always several ways of dividing a program in pieces.
+
+<p>A good "cut" (a good design as the pros say)
+is achieved when the .h files are rather small and clear and the .c files are rather large,
+because the more the interconnections between different parts of a program are
+small and well-defined, and the more the complexity is locked in the .c files
+and not spread in the whole program, the more the program in its entirety will be easy to understand.
+
+<p>You can easily divide the programming time by ten if,
+before starting, you write down a detailed analysis of your program on paper,
+then design .h files that won't change anymore (this is called "programming in the large").
+
+<p>if the paper analysis and the .h files are clear, it will be easy to give them
+to a team of programmers where each one will write one of the .c files.
+
+<p>If, during that phase, you notice that you need to change a .h because you're stuck,
+that something is missing, or there's a case you didn't foresee,
+then your analysis was of poor quality and you will loose time.
+Your analysis method must then be reviewed .. for your next program.
+
+<br><br>
+
+<hr>
+
+
+<H2>Chapter 13 : structures</H2>
+
+<br>
+<H3>13.1 using structures</H3>
+
+<p>The following example declares a structure PRODUCT.
+A structure is in fact a type composed of several fields of simpler types.
+The advantage is that by declaring a variable of type structure, you declare all fields
+that compose it at once.
+
+<hr>
+<PRE>
+// s1.c
+
+from std use console;
+
+struct PRODUCT
+{
+  int     nr;
+  char[4] code;
+  float   price;
+}
+
+void main()
+{
+  PRODUCT rice;
+
+  rice = { nr => 1, code => "rice", price => 12.5};
+
+  printf ("My product is : %d, %s, %f\n", rice.nr, rice.code, rice.price);
+}
+</PRE>
+<hr>
+
+<p>which displays :
+
+<hr>
+<PRE>
+My product is : 1, rice, 12.500000
+</PRE>
+<hr>
+
+<br>
+
+<p>The following example declares an array of structure 'PRODUCT'.
+<p>You will notice that the syntax to access a table element is "[index]",
+whereas the syntax for accessing a structure element is ".field".
+
+<p>"product[1].price" combines both.
+
+<hr>
+<PRE>
+// s2.c
+
+from std use console;
+
+struct PRODUCT
+{
+  int     nr;
+  char[4] code;
+  float   price;
+}
+
+const int MAX_PRODUCTS = 3;
+PRODUCT product[MAX_PRODUCTS];
+
+void main()
+{
+  int i;
+
+  clear product;
+
+  product[0] = {1, "rice", 12.5};
+  product[1] = {2, "appl", 8.0};
+  product[2] = {3, "citr", 4.05};
+
+  for (i=0; i&lt;product'length; i++)
+    printf ("product[%d] is : %d, %s, %f\n", i, product[i].nr, product[i].code, product[i].price);
+
+  printf ("we change the price of appl to 100 !\n");
+  product[1].price = 100.0;
+
+  for (i=0; i&lt;product'length; i++)
+    printf ("product[%d] is : %d, %s, %f\n", i, product[i].nr, product[i].code, product[i].price);
+}
+</PRE>
+<hr>
+
+<p>which displays :
+
+<hr>
+<PRE>
+product[0] is : 1, rice, 12.500000
+product[1] is : 2, appl, 8.000000
+product[2] is : 3, citr, 4.050000
+we change the price of appl to 100 !
+product[0] is : 1, rice, 12.500000
+product[1] is : 2, appl, 100.000000
+product[2] is : 3, citr, 4.050000
+</PRE>
+<hr>
+
+<br>
+<H3>13.2 variant structures</H3>
+
+<p>The example below declares a variant structure called GEOMETRY.
+
+Indeed, you will notice in its declaration a parameter (KIND kind)
+as well as the keyword "switch".
+
+The effective fields of this structure depend on the value of the parameter KIND
+which is given at creation of the variable.
+
+When a variable of type GEOMETRY is created, its discriminant (kind) is fixed,
+its fields are defined, and its size is computed, and all three won't change anymore.
+
+<p>You could have written this program by creating 4 different structures
+ (for circle, triangle, rectangle, point).
+The advantage of gathering these 4 geometric forms in the same structure
+is that you can pass the type GEOMETRY for example to a common display function
+or declare pointers to it.
+
+<p>When you use a field declared in the switch part the language always strictly checks
+that the discriminant has a value that makes this field exist.
+
+<hr>
+<PRE>
+// sp1.c
+
+from std use console;
+
+enum KIND {CIRCLE, TRIANGLE, RECTANGLE, POINT};
+
+struct GEOMETRY (KIND kind)
+{
+  float x, y;
+  switch (kind)
+  {
+    case CIRCLE:
+      float radius;
+      
+    case TRIANGLE:
+      float base;
+      float height;
+      
+    case RECTANGLE:
+      float width;
+      float height2;
+      
+    case POINT:
+      null;    // use keyword null when there are no fields
+  }
+}
+
+void display (GEOMETRY g)
+{
+  printf ("type : %s\n", g.kind'string);
+  printf ("position : (%f,%f)\n", g.x, g.y);
+  switch (g.kind)
+  {
+    case CIRCLE:
+      printf ("radius = %f\n", g.radius);
+      break;
+      
+    case TRIANGLE:
+      printf ("base = %f, height = %f\n", g.base, g.height);
+      break;
+      
+    case RECTANGLE:
+      printf ("dimensions = %f x %f\n", g.width, g.height2);
+      break;
+      
+    default:
+      break;
+  }
+  printf ("\n");
+}
+
+void main()
+{
+  const GEOMETRY my_circle(CIRCLE) = {x => 1.0, y => 2.0, radius => 0.5};
+  const GEOMETRY my_point(POINT)   = {x => 1.0, y => 2.0};
+  
+  GEOMETRY^ my_triangle
+     = new GEOMETRY(TRIANGLE) ' {x => 1.0, y => 2.0, base => 1.0, height => 3.0};
+  
+  display (my_circle);
+  display (my_point);
+  display (my_triangle^);
+  
+  free my_triangle;
+}
+</PRE>
+<hr>
+
+<p>which displays :
+
+<hr>
+<PRE>
+type : CIRCLE
+position : (1.000000,2.000000)
+radius = 0.500000
+
+type : POINT
+position : (1.000000,2.000000)
+
+type : TRIANGLE
+position : (1.000000,2.000000)
+base = 1.000000, height = 3.000000
+</PRE>
+
+<hr>
+
+
+<H2>Chapter 14 : basic libraries</H2>
+
+<p>On the main page of the Safe-C website, you can find a complete list
+of all components of the standard library <b>std.lib</b> with their content.
+
+<p>We don't want to drown you, so we will just give an overview of the most used
+components, so that you know that they exist.
+If you don't find what you're looking for, don't hesitate to browse the complete
+list on the main page of this website.
+
+<p>To use a component, you need to put a clause 'from std use component_name;'
+at the start of your program. The file of the standard library (std.lib) must be in the folder
+with the compiler.
+
+<p>Example:
+
+<PRE>
+  // p.c
+  
+  from std use win;
+  
+  void main()
+  {
+    message_box (title => "My message box", message => "Please click on Ok", button => " Ok ");
+  }
+</PRE>
+ 
+<br>
+
+<H3>14.1 console : display on command box</H3>
+
+<PRE>
+  void printf (string format, object[] arg);
+  int scanf (string format, out object[] arg);
+</PRE>
+
+<H3>14.2 strings : char and string manipulation</H3>
+
+<PRE>
+  int strcpy (out string dest, string src);
+  int strncpy (out string dest, string src, int len);
+  int strcat (ref string dest, string src);
+  int strlen (string s);
+  int strcmp (string a, string b);
+  int stricmp (string a, string  b);
+  int strncmp (string a, string b, int maxlen);
+  int strnicmp (string a, string  b, int maxlen);
+  int memcmp (byte[] a, byte[] b);
+  int strchr (string s, char c);
+  int strrchr (string s, char c);
+  int strstr (string text, string fragment);
+  int stristr (string text, string fragment);
+  int sprintf (out string buffer, string format, object[] arg);
+  int sscanf (string buffer, string format, out object[] arg);
+  int strcatf (ref string buffer, string format, object[] arg);
+  char tolower (char c);
+  char toupper (char c);
+  bool isalpha (char c);   // A-Z a-z
+  bool isdigit (char c);   // 0-9
+  bool isxdigit (char c);  // 0-9 A-F a-f
+
+  int wstrcpy (out wstring dest, wstring src);
+  int wstrncpy (out wstring dest, wstring src, int len);
+  int wstrcat (ref wstring dest, wstring src);
+  int wstrlen (wstring s);
+  int wstrcmp (wstring a, wstring b);
+  int wstricmp (wstring a, wstring  b);
+  int wstrncmp (wstring a, wstring b, int maxlen);
+  int wstrnicmp (wstring a, wstring  b, int maxlen);
+  int wstrchr (wstring s, wchar c);
+  int wstrrchr (wstring s, wchar c);
+  int wstrstr (wstring text, wstring fragment);
+  int wstristr (wstring text, wstring fragment);
+  int wsprintf (out wstring buffer, wstring format, object[] arg);
+  int wsscanf (wstring buffer, wstring format, out object[] arg);
+  int wstrcatf (ref wstring buffer, wstring format, object[] arg);
+  wchar wtolower (wchar c);
+  wchar wtoupper (wchar c);
+  bool wisalpha (wchar c);   // A-Z a-z
+  bool wisdigit (wchar c);   // 0-9
+  bool wisxdigit (wchar c);  // 0-9 A-F a-f
+</PRE>
+
+<H3>14.3 calendar : calender</H3>
+
+<PRE>
+  struct DATE_TIME;
+  void get_datetime (out DATE_TIME datetime);
+  int max_days_in_month (int month, int year);
+  bool is_valid_date (int day, int month, int year);
+  int day_of_week (int day, int month, int year);
+  int nb_days_since_1901 (int day, int month, int year);
+  void add_days (ref DATE_TIME date, int nb_days);
+  void add_seconds (ref DATE_TIME date, long nb_secs);
+  int get_time_zone ();
+</PRE>
+
+<H3>14.4 math : math functions</H3>
+
+<PRE>
+  // basic functions
+  double fabs  (double x);   // absolute value
+  double sqrt  (double x);   // square root, with x >= 0.
+  double round (double x);   // rounds to nearest integer
+  double ceil  (double x);   // rounds up
+  double floor (double x);   // rounds down
+  double fmin (double a, double b);             // minimum
+  double fmax (double a, double b);             // maximum
+  double fmin3 (double a, double b, double c);  // minimum of 3 values
+  double fmax3 (double a, double b, double c);  // maximum of 3 values
+
+  // trigonometric functions
+  const double PI = 3.141592653589793238;
+  double pi();        // pi in internal 66-bit precision
+  double sin (double x);
+  double cos (double x);
+  double tan (double x);     // same as sin(x)/cos(x), with cos(x) != 0.
+  double asin (double x);    // with x in [-1..+1]
+  double acos (double x);    // with x in [-1..+1]
+  double atan (double x);
+  double atan2 (double y, double x);   // valid for all values of x and y.
+
+  // exponential, logarithm and power functions
+  double exp   (double x);   // e exponent x
+  double ln    (double x);   // log e, with x > 0
+  double log2  (double x);   // log 2, with x > 0
+  double log10 (double x);   // log 10, with x > 0
+  double pow (double base, double exponent);      // base to the power of exponent
+
+  // hyperbolic functions
+  double sinh (double x);
+  double cosh (double x);
+  double tanh (double x);
+  double asinh (double x);
+  double acosh (double x);
+  double atanh (double x);
+  
+  // infinite test
+  bool isINF (double x);
+</PRE>
+
+<H3>14.5 arithm : simple arithmetic</H3>
+
+<PRE>
+  int abs (int a);          // valeur absolue
+  int min (int a, int b);   // minimum
+  int max (int a, int b);   // maximum
+  int min3 (int a, int b, int c);
+  int max3 (int a, int b, int c);
+  uint umin (uint a, uint b);
+  uint umax (uint a, uint b);
+  uint umin3 (uint a, uint b, uint c);
+  uint umax3 (uint a, uint b, uint c);
+  long labs (long a);
+  long lmin (long a, long b);
+  long lmax (long a, long b);
+  long lmin3 (long a, long b, long c);
+  long lmax3 (long a, long b, long c);
+  int  ilog2 (int a);    // logarithme base 2, a > 0
+  uint ulog2 (uint a);   // logarithme base 2, a > 0
+</PRE>
+
+<H3>14.6 random : generation of random numbers</H3>
+
+<PRE>
+  int rnd (int first, int last);  // nombre au hasard entre first et last
+  void get_random_number (out byte[] value);
+</PRE>
+
+<H3>14.7 exception : exception treatment</H3>
+
+<PRE>
+  // see chapter 6 : crashs and tracing
+  void arm_exception_handler (bool create_crash_report_file        = true,
+                              bool display_fatal_error_message_box = true);
+</PRE>
+
+<H3>14.8 tracing : trace file</H3>
+
+<PRE>
+  // see chapter 6 : crashs and tracing
+  void open_trace (string filename,    // for example "trace.tra"
+                   long   max_file_size = 64*1024*1024,  // default is 64 MB
+                   bool   date = true,
+                   bool   time = true,
+                   bool   msec = false);
+  void trace (string format, object[] arg);
+  void trace_block (byte[] block);
+  void close_trace ();
+</PRE>
+
+<H3>14.9 sorting : array sorting</H3>
+
+<PRE>
+  // see chapter 5 : arrays
+  package HeapSort
+  package QuickSort
+  package BubbleSort
+</PRE>
+
+<H3>14.10 files : text and binary files, folders, disk.</H3>
+
+<PRE>
+  //----------------------------------------------------------------------------
+  // Text Files : functions for reading or writing buffered text files.
+  //----------------------------------------------------------------------------
+  struct FILE;  // the same FILE must not be used by several threads at the same time.
+  enum ENCODING {ANSI, UTF8, UTF16, UTF16BE};
+  int fopen (out FILE file, string filename);
+  int fcreate (out FILE file, string filename, ENCODING encoding);
+  int fappend (out FILE file, string filename, ENCODING encoding);
+  const int FEOF = +1;  // return value that indicates end of file
+  int fgetc (ref FILE file, out char c);
+  int wfgetc (ref FILE file, out wchar c);
+  int fputc (ref FILE file, char c);
+  int wfputc (ref FILE file, wchar c);
+  int fgets (ref FILE file, out string buffer);
+  int wfgets (ref FILE file, out wstring buffer);
+  int fputs (ref FILE file, string buffer);
+  int wfputs (ref FILE file, wstring buffer);
+  int fscanf (ref FILE file, string format, out object[] arg);
+  int wfscanf (ref FILE file, wstring format, out object[] arg);
+  int fprintf (ref FILE file, string format, object[] arg);
+  int wfprintf (ref FILE file, wstring format, object[] arg);
+  bool feof (ref FILE file);
+  int fflush (ref FILE file);
+  int fclose (ref FILE file);
+  int fhandle (ref FILE file);
+
+  //----------------------------------------------------------------------------
+  // Binary Files : functions that operate on low-level binary files.
+  //----------------------------------------------------------------------------
+  int create (string filename, uint access = WRITE, uint share = READ, ORGANIZATION organization = UNDEFINED);
+  int open (string filename, uint access = READ, uint share = READ, ORGANIZATION organization = UNDEFINED);
+  int read (int handle, out byte[] buffer);
+  int write (int handle, byte[] buffer);
+  long lseek (int handle, long offset, SEEK_MODE mode = SEEK_SET);
+  long filesize (int handle);
+  void get_ftime (int handle, out calendar.DATE_TIME time);   // get last write time.
+  void set_ftime (int handle, calendar.DATE_TIME time);       // set create, last access, last write time.
+  int lock_file   (int handle, LOCK lock, long offset, long nb_bytes);
+  int unlock_file (int handle, LOCK lock, long offset, long nb_bytes);
+  int flush (int handle);
+  int close (int handle);
+
+  int move_file (string source, string target);
+  int copy_file (string source, string target, bool overwrite = true);
+  int delete_file (string filename);
+
+  void split_pathname (    string pathname,
+                       out string device,
+                       out string directory,  // starts with / or \ if absolute path
+                       out string filename);   // does not contain any / or \
+                       
+  int expand_pathname (    string current_directory,
+                           string source_filename,
+                       out string result_filename);
+                       
+  void normalize_pathname (ref string pathname);
+
+  bool name_matches_pattern (string name,
+                             string pattern,
+                             char   replace_one  = '?',
+                             char   replace_many = '*');
+
+  int select_filename (    string  dialog_title,
+                           string  mask,
+                           bool    saving,     // false=load, true=save
+                       out char    filename[MAX_FILENAME_LENGTH],
+                           string  default_filename = "",
+                           uint    hwnd = 0);  // parent window handle
+
+  //----------------------------------------------------------------------------
+  // Directories
+  //----------------------------------------------------------------------------
+  struct FILE_INFO;
+  int open_directory (out FILE_INFO info, string directory_name);
+  int read_directory (ref FILE_INFO info);
+  int close_directory (ref FILE_INFO info);
+  int create_directory (string directory_name);
+  int remove_directory (string directory_name);
+  void get_current_directory (out char directory_name[MAX_FILENAME_LENGTH]);
+  int set_current_directory (string directory_name);
+
+  //----------------------------------------------------------------------------
+  // Disk Volumes
+  //----------------------------------------------------------------------------
+  long free_disk_space (string directory_name);   // any directory on the disk
+</PRE>
+
+<H3>14.11 image : compression and decompression (jpg, gif, png, ..), image treatment</H3>
+
+<PRE>
+  // Part 1 : image compresssion/decompression
+  enum IMAGE_FILE_FORMAT {FORMAT_BMP, FORMAT_JPEG, FORMAT_GIF, FORMAT_PNG, FORMAT_TIFF};
+  struct IMAGE;
+  int create_image (out IMAGE image, string filename, uint width, uint height, IMAGE_CREATION_PARAMETERS parameters);
+  int open_image (out IMAGE image, string filename);
+  void get_image_size (    IMAGE image, out uint  width, out uint  height);
+  void get_image_attributes (IMAGE image, out IMAGE_ATTRIBUTES attr);
+  void set_image_options (IMAGE image, IMAGE_OPTIONS opt);
+  int read_image (IMAGE image, out byte[] buffer);
+  int next_image (IMAGE image);
+  int write_image (IMAGE image, byte[] buffer);
+  void multiply_rgb_by_alpha (ref byte[] buffer);
+  int close_image (ref IMAGE image);
+
+  // Part 2 : RGBA bitmap manipulations
+  int load_image (out IMAGE_INFO info, string filename);
+
+  int save_image (IMAGE_INFO                info,
+                  string                    filename, /* output file */
+                  IMAGE_CREATION_PARAMETERS param);   /* output parameters */
+
+  void free_image (ref IMAGE_INFO info);
+
+  int copy_image (IMAGE_INFO source, out IMAGE_INFO target);
+
+  int bestfit_size (ref IMAGE_INFO info,
+                    ref uint       width,      /* in out ! */
+                    ref uint       height);    /* in out ! */
+
+  int resize_image (ref IMAGE_INFO info,
+                        uint       width,
+                        uint       height,
+                        uint       border_color = 0xFF000000);  // opaque black
+
+  int resize_image2 (    IMAGE_INFO info,
+                         uint       width,
+                         uint       height,
+                         uint       border_color = 0xFF000000,  // opaque black
+                     out IMAGE_INFO result);
+
+  int zoom_image
+       (    IMAGE_INFO source,       /* source image */
+
+            uint       click_x,      /* zoom x-center on screen */
+            uint       click_y,      /* zoom y-center on screen */
+            int        zoom,         /* in percent (100 .. 6_500_000) */
+                                     /* use 100 for first call of new image ! */
+            uint       width,        /* target screen width  */
+            uint       height,       /* target screen height */
+        ref CLIP_INFO  source_clip,  /* clear for first call, value must be kept between calls */
+        ref CLIP_INFO  target_clip,  /* clear for first call, value must be kept between calls */
+            uint       border_color, /* =0 */
+        out IMAGE_INFO target);      /* result image for screen */
+
+  int rotate_image (ref IMAGE_INFO info,
+                        int        angle,
+                        uint       border_color = 0xFF000000);  // opaque black
+
+  int rotate_image2 (    IMAGE_INFO info,
+                         int        angle,
+                         uint       border_color = 0xFF000000,  // opaque black
+                     out IMAGE_INFO result);
+
+  int copy_image_rectangle (    IMAGE_INFO source_image,
+                                CLIP_INFO  source_clip,
+                            out IMAGE_INFO target_image);
+
+  int compute_bestfit_target_clip (    CLIP_INFO source_clip,
+                                       CLIP_INFO target_clip,
+                                   out CLIP_INFO bestfit_target_clip);
+
+  void reverse_clip_coordinates (    uint      x,
+                                     uint      y,
+                                     CLIP_INFO source_clip,
+                                     CLIP_INFO target_clip,
+                                 out uint      out_x,
+                                 out uint      out_y);
+
+  int compute_zoom_clip_info
+          (    uint      center_x,      /* within source                 */
+               uint      center_y,      /* within source                 */
+               int       zoom_factor,   /* in percent (100 .. 6_500_000) */
+           ref CLIP_INFO source_clip,   /* in out                        */
+           ref CLIP_INFO target_clip);  /* in out                        */
+
+  int stretch_image (IMAGE_INFO source,
+                     CLIP_INFO  source_clip,
+                     IMAGE_INFO target,
+                     CLIP_INFO  target_clip);
+
+</PRE>
+
+<H3>14.12 draw : drawing in a memory buffer (line, circle, text, image)</H3>
+
+<PRE>
+  struct DRAW_CONTEXT;
+  void init_draw (out DRAW_CONTEXT dc,
+                      byte[]^      buffer,     /* -> (4*width*height) bytes */
+                      uint         width,
+                      uint         height);
+  void draw_line (ref DRAW_CONTEXT dc,
+                      int          x1,
+                      int          y1,
+                      int          x2,
+                      int          y2,
+                      uint         color,    /* = rgb(red,green,blue) */
+                      int          thick);   /* >= 1                  */
+  void draw_circle (ref DRAW_CONTEXT dc,
+                        int          x,
+                        int          y,
+                        int          radius,
+                        uint         color,
+                        int          thick);
+  void draw_solid_circle (ref DRAW_CONTEXT dc,
+                              int          x,
+                              int          y,
+                              int          radius,
+                              uint         color);
+  int draw_text (ref DRAW_CONTEXT  dc,
+                     string        text,           /* string to display */
+                     string        font_name,      /* ex: "Times New Roman" */
+                     int           font_height,    /* ex: 12 */
+                     int           x,              /* lower left corner */
+                     int           y,
+                     uint          color,
+                     uint          style);         /* = 0 */
+
+  int draw_wtext (ref DRAW_CONTEXT  dc,
+                     wstring       text,           /* string to display */
+                     string        font_name,      /* ex: "Times New Roman" */
+                     int           font_height,    /* ex: 12 */
+                     int           x,              /* lower left corner */
+                     int           y,
+                     uint          color,
+                     uint          style);         /* = 0 */
+  void draw_image (ref DRAW_CONTEXT  dc,
+                       int           x,            /* target (upper-left corner) */
+                       int           y,
+                       byte[]        image,
+                       uint          width,
+                       uint          height,
+                       uint          clip_x,       /* =0 for all image */
+                       uint          clip_y,       /* =0 for all image */
+                       uint          clip_size_x,  /* =width for all image */
+                       uint          clip_size_y,  /* =height for all image */
+                       uint          flags = 0);
+  void set_draw_origin (ref DRAW_CONTEXT dc,
+                            int          ox,
+                            int          oy,
+                            int          dx,   /* direction of x-axis */
+                            int          dy);  /* direction of y-axis */
+  void set_draw_clip (ref DRAW_CONTEXT dc,
+                          int          min_x,
+                          int          min_y,
+                          int          max_x,
+                          int          max_y);
+</PRE>
+
+<H3>14.13 win : display of window, button, listbox, ..</H3>
+
+<PRE>
+  void message_box (string title, string message, string button);
+  void create_screen (int x, int y, int x_size, int y_size, string title);
+  void set_screen_title (string title);
+  void close_screen ();
+  void create_text (int x, int y, int x_size, int y_size, OBJECT_ID id);
+  void text_put (string text, OBJECT_ID id);
+  void create_edit (int x, int y, int x_size, int y_size, int length, OBJECT_ID id);
+  void edit_get (out string buffer, OBJECT_ID id);
+  void create_checkbox (int x, int y, int x_size, int y_size,
+                        int box_width, string text, OBJECT_ID id);
+  void checkbox_get (out bool setting, OBJECT_ID id);
+  void create_listbox (int x, int y,        int x_size, int y_size,
+                       int arrow_box_width, int arrow_box_height,
+                       int length,          OBJECT_ID id);
+  void listbox_insert (int       index,    // 0 = append to end
+                       string    text,
+                       OBJECT_ID id);
+  void create_button (int x, int y, int x_size, int y_size, string text, OBJECT_ID id);
+  void get_event (out EVENT event);
+  // ....
+</PRE>
+
+<hr>
+
+<p>Example:
+
+<PRE>
+  // p.c
+  
+  from std use win;
+  
+  void main()
+  {
+    int left, top, right, bottom;
+    bool quit = false;
+    
+    get_screen_borders (out left, out top, out right, out bottom);
+    
+    create_screen (x => 100, y => 100, x_size => left+right+300, y_size => top+bottom+200, title => "Test");
+    
+    create_button (x => 100, y => 100, x_size => 100, y_size => 30, text => "Click me", id => 10);
+    
+    while (!quit)
+    {
+      EVENT event;
+      get_event (out event);
+      switch (event.typ)
+      {
+        case EVENT_BUTTON_PRESSED:
+          switch (event.id)
+          {
+            case 10:
+              message_box (title => "My message box", message => "Thank you for your click !", button => " Ok ");
+              quit = true;
+              break;
+              
+            default:
+              break;
+          }
+          break;
+          
+        default:
+          break;
+      }
+    }
+    
+    close_screen ();
+  }
+</PRE>
+
+<hr>
+
+<p>The utility <b>makelib.exe</b> can be used to create your own library files, as follows :
+copy your .h and .c files in a folder (for example in C:\LIB)
+and type <b>makelib mylib C:\LIB\</b>. A file mylib.lib will then be created,
+add it in the folder with the other compiler files.
+
+<p>Import it into your program with <b>from mylib use your_component;</b>
+where your_component corresponds to the name of your .h file.
+
+<hr>
+
+<p>In rare cases, it's possible that two components from different libraries carry
+the same name. It is then possible to import one of them while renaming it with an <b>as</b> clause :
+
+<PRE>
+  from std use math;
+  from mylib use math as math2;
+</PRE>
+  
+<hr>
+
+
+<H2>Chapter 15 : packages and generic packages</H2>
+
+<br>
+<H3>15.1 packages</H3>
+
+<p>A package is an envelope used to group a series of declarations.
+<p>Note the keywords <b>package</b> to declare a package and <b>end</b> to end it.
+
+<p>Example:
+
+<hr><PRE>
+  package Stack
+    const int MAX = 1000;
+    void push (int i);
+    int pop ();
+  end Stack;
+</PRE><hr>
+
+<p>In the example above, as the package contains function declarations,
+we must also declare a package body that will contain the bodies of the corresponding functions.
+<p>Note the keywords <b>package body</b> to declare a package body.
+
+<hr><PRE>
+  package body Stack
+
+    int table[MAX];
+    int index = 0;
+
+    public void push (int i)
+    {
+      table[index++] = i;
+    }
+
+    public int pop ()
+    {
+      return table[--index];
+    }
+    
+  end Stack;
+</PRE><hr>
+
+<p>All declarations inside the package are accessible from the outside. On the other hand
+declarations inside the package body are private and non-accessible from the outside.
+
+<p>You can declare packages in .h or .c files,
+the optional package bodies are only allowed in .c files.
+<p>Note that you can nest packages.
+
+<p>A package body is mandatory if the package contains incomplete declarations
+like opaque types or function declarations.
+
+<p>Here is a full example for a package Stacks that can be used to stack values :
+
+<hr><PRE>
+  from std use console;
+
+  package Stacks
+    struct STACK;      // an opaque type
+    void push (ref STACK s, int i);
+    int pop (ref STACK s);
+  end Stacks;
+
+
+  package body Stacks
+    const int MAX = 1000;
+
+    struct STACK
+    {
+      int table[MAX];
+      int index;
+    }
+
+    public void push (ref STACK s, int i)
+    {
+      s.table[s.index++] = i;
+    }
+
+    public int pop (ref STACK s)
+    {
+      return s.table[--s.index];
+    }
+
+  end Stacks;
+
+
+  void main()
+  {
+    STACK s;
+
+    clear s;
+    push (ref s, 12);
+    printf ("%d\n", pop(ref s));
+  }
+</PRE><hr>
+
+<p>This example can also be split in 3 different files :
+
+
+<hr><PRE>
+  // stacks.h
+
+  package Stacks
+
+    struct STACK;      // an opaque type
+
+    void push (ref STACK s, int i);
+    int pop (ref STACK s);
+
+  end Stacks;
+</PRE>
+
+<hr><PRE>
+  // stacks.c
+
+  package body Stacks
+
+    const int MAX = 1000;
+
+    struct STACK
+    {
+      int table[MAX];
+      int index;
+    }
+
+    public void push (ref STACK s, int i)
+    {
+      s.table[s.index++] = i;
+    }
+
+    public int pop (ref STACK s)
+    {
+      return s.table[--s.index];
+    }
+
+  end Stacks;
+</PRE>
+
+<hr><PRE>
+  // prog.c
+
+  from std use console;
+  use stacks;
+
+  void main()
+  {
+    STACK s;
+
+    clear s;
+    push (ref s, 12);
+    printf ("%d\n", pop(ref s));
+  }
+</PRE><hr>
+
+<p>Note that you can put several packages in the same source file.
+In that case, it is possible that name ambiguities arise that can be solved
+by prefixing the package name, like in this example :
+
+<hr><PRE>
+  package A
+    const int MAX = 100;
+  end A;
+
+  package B
+    const int MAX = 200;
+  end B;
+
+  void main()
+  {
+    int i;
+
+    i = MAX;    // ERROR: MAX is ambiguous as it is declared twice
+    i = A.MAX;  // OK (we prefixed the package name)
+    i = B.MAX;  // OK
+  }
+</PRE><hr>
+
+<br>
+<H3>15.2 generic packages</H3>
+
+<p>The purpose of a generic package is to do a copy/paste of program lines.
+
+Each copy will be slightly different because the generic package will have various
+type and function parameters that you can provide during the copy.
+
+<p>Here is an exemple of a generic package BubbleSort that can sort any array.
+The generic package will have two parameters :
+<p>. first, a type "ELEMENT" that can be replaced by any type.
+It is the type of elements of the array to be sorted.
+<p>. second, a function "compare" that takes two ELEMENT and returns an int.
+This function enables the package to know the order of two elements.
+<p>Inside the package "BubbleSort" there is only a function "sort"
+that treats a parameter of type array of ELEMENT by using the two provided parameters.
+
+<hr><PRE>
+  // bubble.h
+  
+  generic &lt;ELEMENT&gt;                      // generic type ELEMENT
+    int compare (ELEMENT a, ELEMENT b);  // return -1 if a&lt;b, 0 if a==b, +1 if a&gt;b
+  package BubbleSort
+    void sort (ref ELEMENT table[]);
+  end BubbleSort;
+</PRE><hr>
+
+<p>Here is the package body. You see that it uses ELEMENT and compare.
+
+<hr><PRE>
+  // bubble.c
+
+  package body BubbleSort
+    public void sort (ref ELEMENT table[])
+    {
+      int     i, j;
+      ELEMENT temp;
+
+      for (i=1; i&lt;table'length; i++)
+      {
+        for (j=i; j&gt;0; j--)
+        {
+          if (compare (table[j-1], table[j]) &lt;= 0)
+            break;
+
+          temp       = table[j-1];
+          table[j-1] = table[j];
+          table[j]   = temp;
+        }
+      }
+    }
+  end BubbleSort;
+</PRE><hr>
+
+
+<p>How to use the generic package ?  To do a copy/paste
+(this is called "instantiation" by pros), we use the following syntax
+that will create a copy of the package BubbleSort by replacing the two parameters.
+The package after copy will be called "Sort_int" because it sorts an array of "int".
+
+<hr><PRE>
+  package Sort_int = new BubbleSort (ELEMENT =&gt; int,
+                                     compare =&gt; compare_int);
+</PRE><hr>
+
+<p>But where does the function compare_int come from ?  well you have to write it yourself
+because the sorting package does not know your type so it does not know how to compare
+two elements.
+
+<p>Here is the complete instantiation example :
+
+<hr><PRE>
+  // p.c
+  
+  use bubble;
+  
+  int compare_int (int a, int b)
+  {
+    if (a &lt; b) return -1;
+    if (a &gt; b) return +1;
+    return 0;
+  }
+
+  package Sort_int = new BubbleSort (ELEMENT =&gt; int,
+                                     compare =&gt; compare_int);
+
+  void main()
+  {
+    int table[5] = {2, 19, 3, 9, 4};
+
+    sort (ref table);    // to be written Sort_int.sort if ambiguus
+  }
+</PRE><hr>
+
+<p>You see that generic packages are a bit complicated to use.
+They are however unavoidable to be able to write general sorting and other
+data structure manipulation algorithms with maximal execution speed
+and full memory access security.
+
+<p>The only way to avoid them would be to copy/paste program lines manually
+by adapting it for each type, which is not very advisable.
+
+<br>
+
+<hr>
+
+
+<H2>Chapter 16 : files, byte arrays and type object</H2>
+
+<br>
+<H3>16.1 files and byte arrays</H3>
+
+<p>The standard library component <b>files</b> provides low-level file access.
+
+<p>If you examine the functions that read and write files,
+you will notice that they accept only parameters of type "array of byte" :
+ 
+<hr><PRE>
+int read (int handle, out byte[] buffer);
+int write (int handle, byte[] buffer);
+</PRE><hr>
+
+<p>How can we then write for example an int, a float, a structure in a file ?
+
+<p>Well it's easy because in Safe-C, almost all types are automatically convertible
+to byte arrays. So you can write this :
+
+<hr><PRE>
+from std use files, strings;
+
+void main()
+{
+  int   fd;
+  float f;
+  char  buffer[80];
+  bool  b;
+  
+  fd = create ("myfile.data");
+  
+  f = 3.14;
+  write (fd, f);        // <-- automatic conversion float to byte[]
+  
+  strcpy (out buffer, "Hello");
+  write (fd, buffer);   // <-- automatic conversion char[] to byte[]
+
+  b = true;
+  write (fd, b);        // <-- automatic conversion bool to byte[]
+  
+  close (fd);
+}
+</PRE><hr>
+
+<p>Which types are not convertible to byte arrays ?
+
+<p>Structures, first, are convertible only if their declaration is preceded by the keyword
+<b>packed</b> which indicates that they have no alignment gaps between their fields.
+
+<p>Here is how to write a struct in a file :
+
+<hr><PRE>
+from std use files;
+
+void main()
+{
+  int   fd;
+  
+  packed struct REC    // <--- mandatory keyword "packed" !
+  {
+    char  name[4];
+    float f;
+    bool  b;
+  }
+  
+  REC rec;
+  
+  fd = create ("myfile.data");
+  
+  rec = {"ABCD", 1.234, true};
+  write (fd, rec);        // <-- automatic conversion REC to byte[]
+  
+  close (fd);
+}
+</PRE><hr>
+
+<p>Obviously, when you prefix the keyword packed to a structure,
+it can only contain simple or packed fields.
+
+<p>Furthermore, the structure must not contain pointer types.
+You must remember that packed and pointers don't mix.
+There is no reason to write pointers on disk,
+and it's even dangerous to read some because they probably aren't valid anymore.
+For this reason, standard libraries do not allow to read or write pointer values
+on disk, network, or any other input/output (note that it's still possible to do it
+using unsafe code).
+
+<br>
+
+<p>The attribute 'size can operate on all packed types and is used to compute the number
+of bytes of a type. Note that 'size returns an uint (unsigned integer)
+that you will possibly have to convert into int.
+
+<p>In this example we will check that read() reads the correct number of bytes.
+The same check should be done during a write() in the above examples,
+we didn't do it for clarity.
+
+<hr><PRE>
+from std use console, files;
+
+void main()
+{
+  int fd;
+  
+  packed struct REC
+  {
+    char  name[4];
+    float f;
+    bool  b;
+  }
+  
+  REC rec;
+  
+  fd = open ("myfile.data");
+  
+  if (read (fd, out rec) != (int)rec'size)   // <-- attribute size
+  {
+    printf ("error: cannot read file\n");
+    close (fd);
+    return;
+  }
+  
+  close (fd);
+}
+</PRE><hr>
+
+
+<br>
+<p>The attribute 'byte is used to convert any packed type to a byte array.
+It is therefore easy to copy, for example, the 4 bytes of a float to the 4 bytes of an int :
+
+<hr><PRE>
+  float f = 1.2;
+  int   i;
+  
+  i'byte = f'byte;
+</PRE><hr>
+
+<p>or even to copy the two last bytes of a float to a 2-byte array :
+
+<hr><PRE>
+  float f = 1.2;
+  byte  b[2];
+  
+  b = f'byte[2:2];
+</PRE><hr>
+
+<br>
+
+<H3>16.2 type object</H3>
+
+<p>In Safe-C, the type <b>object</b> is predefined as byte array.
+So, everywhere you write "byte [ ]" you could also write "object".
+
+<p>For clarity reasons we mostly use type 'object' in the declaration of functions
+with a varying number of parameters. For example, printf is defined as :
+
+<hr><PRE>
+  void printf (string format, object[] arg);
+</PRE><hr>
+
+<p>Safe-C applies the following rule : if the last parameter of a function
+has type "object [ ]", then the function accepts a variable number of parameters
+that must all be packed, thus convertible to array bytes.
+<p>Inside the function, these parameters are received as a table of byte arrays.
+
+<p>Example:
+
+<hr><PRE>
+  from std use console;
+  
+  void affichage (int test, object[] par)
+  {
+    int i, j;
+    
+    printf ("\n");
+    printf ("test %d\n", test);
+    for (i=0; i&lt;par'length; i++)
+    {
+      printf ("parametre %d : ", i+1);
+      for (j=0; j&lt;par[i]'length; j++)
+        printf ("%u ", par[i][j]);
+      printf ("\n");
+    }
+  }
+  
+  void main()
+  {
+    affichage (1);
+    affichage (2, 1.1275);
+    affichage (3, (double)1.1275);
+    affichage (4, "ABCD", 'G', 1.1275);
+    affichage (5, (tiny)3);
+    affichage (6, 3);
+    affichage (7, 3L);
+    affichage (8, L"Hello");
+  }
+</PRE><hr>
+
+<p>will display :
+
+<hr><PRE>
+test 1
+
+test 2
+parametre 1 : 236 81 144 63
+
+test 3
+parametre 1 : 10 215 163 112 61 10 242 63
+
+test 4
+parametre 1 : 65 66 67 68
+parametre 2 : 71
+parametre 3 : 236 81 144 63
+
+test 5
+parametre 1 : 3
+
+test 6
+parametre 1 : 3 0 0 0
+
+test 7
+parametre 1 : 3 0 0 0 0 0 0 0
+
+test 8
+parametre 1 : 72 0 101 0 108 0 108 0 111 0
+</PRE>
+<hr>
+
+
+
+<H2>Chapter 17 : pointers and unsafe pointers</H2>
+
+<br>
+<H3>17.1 pointers</H3>
+
+<p>In all examples of the previous chapters, each variable carries a name,
+each array variable has a constant size,
+and each variable exists either for the whole program duration or as long as the function
+wherein it is declared is active.
+
+<p>Pointers are used to overcome these limitations and allow creating anonymous variables,
+arrays of variable size, and variables where you control precisely the lifetime.
+
+<p>Example p1.c shows the declaration of a variable p which is a pointer to an array of int
+(notation int[ ]^, read right to left).
+
+<p>Thanks to the allocator 'new', we allocate memory for an anonymous array of int of "count" elements,
+and we save in the pointer p the memory address that allows access to this array.
+
+<p>To access our anonymous array, we use the notation p^[i].
+ We start from the pointer "p", the symbol "^" follows the pointer to access the array,
+ and finally "[i]" gives access to the wished array element.
+ The result is then an int variable.
+
+<p>Notation "p^'length" is used to determine the number of elements of the array.
+It's simply the attribut 'length applied to the array p^.
+
+<p>When you don't need the array anymore, you must not forget to free its memory
+with the instruction free, otherwise you would end consuming all the available memory.
+
+<hr>
+<PRE>
+// p1.c
+
+from std use console, math;
+
+void main()
+{
+  int    count, i;
+  int[]^ p;
+
+  printf ("Please enter the number of elements : ");
+  scanf (" %d", out count);
+
+  p = new int[count];
+
+  for (i=0; i&lt;p^'length; i++)
+    p^[i] = (int)(100.0*sin(100.0 * (float)i / 180.0 * PI));
+
+  for (i=0; i&lt;p^'length; i++)
+    printf ("p^[%d] = %d\n", i, p^[i]);
+
+  free p;
+}
+</PRE>
+<hr>
+
+<PRE>
+Please enter the number of elements : 10
+p^[0] = 0
+p^[1] = 98
+p^[2] = -34
+p^[3] = -86
+p^[4] = 64
+p^[5] = 64
+p^[6] = -86
+p^[7] = -34
+p^[8] = 98
+p^[9] = 0
+</PRE>
+
+<br><br>
+
+<p>Example p2.c declares a structure NODE composed of an int and a pointer to NODE itself.
+We can use this to create a chain of linked variables NODE that all point to the next
+node, the last node pointing to null.
+
+<p>The constant value "null" is used to indicate that we point to nothing at all.
+
+<p>Note that with a single variable "p", we can access the whole list of anonymous variables
+chained together by pointers. We can walk on this chain, node after node,
+to display all nodes (with display), or to free them (with free_list).
+
+<hr>
+<PRE>
+// p2.c
+
+from std use console;
+
+struct NODE
+{
+  int   n;
+  NODE^ next;
+}
+
+void display (NODE^ ptr)
+{
+  NODE^ p = ptr;
+  while (p != null)
+  {
+    printf ("%d ", p^.n);
+    p = p^.next;
+  }
+}
+
+void free_list (NODE^ ptr)
+{
+  NODE^ p = ptr;
+  NODE^ q;
+  while (p != null)
+  {
+    q = p;
+    p = p^.next;
+    free q;
+  }
+}
+
+void main()
+{
+  NODE^ p;
+
+  p = new NODE ' {17, null};
+  p = new NODE ' {12, p};
+  p = new NODE ' {8, p};
+  p = new NODE ' {3, p};
+
+  display (p);
+  free_list (p);
+}
+</PRE>
+<hr>
+
+<p>which displays :
+
+<hr>
+<PRE>
+3 8 12 17
+</PRE>
+<hr>
+
+<p>The allocator "new" can be enhanced by an initial value for the created anonymous variable.
+We can use, either the apostrophe and aggregate notation if we want to specify all fields :
+
+<hr>
+<PRE>
+  NODE^ p;
+  p = new NODE ' {17, null};
+</PRE>
+<hr>
+
+<p>or the apostrophe and parenthesis notation for a value of same type as the created node :
+
+<hr>
+<PRE>
+  NODE n;
+  p = new NODE ' (n);
+</PRE>
+<hr>
+
+<p>If you don't specify any initial value, the anonymous variable will be cleared to zeroes :
+
+<hr>
+<PRE>
+  p = new NODE;
+</PRE>
+<hr>
+
+<p>Sometimes you wish to declare several structures where the pointer fields
+reference each other. You need then to pre-declare one of the structures
+as an "incomplete" type, before re-declaring it a second time below,
+completely this time.
+
+<hr>
+<PRE>
+  typedef NODE2;   // incomplete type
+
+  struct NODE1
+  {
+    int    count;
+    NODE1^ up;
+    NODE2^ gauche, droite; // uses the incomplete type
+  }
+
+  struct NODE2     // complete redeclaration
+  {
+    int    count;
+    NODE1^ gauche, droite;
+  }
+</PRE><hr>
+
+<br>
+
+<H3>17.2 unsafe pointers</H3>
+
+<p>To be able to write standard libraries that call the operating system,
+you need sometimes to use C's old unsafe pointers.
+
+<p>To mark clearly this dangerous use, Safe-C does not allow the use of unsafe pointers
+outside an unsafe section.
+
+<p>Example, the function read() of files.c :
+
+<hr><PRE>
+  #begin unsafe
+
+  [extern "KERNEL32.DLL"]
+  int ReadFile (
+    int   hFile,
+    byte  *buffer,
+    uint  size,
+    int   *BytesRead,
+    byte  *lpOverlapped);
+
+  // returns nb of bytes read (>=0), or a negative error code.
+  public int read (int handle, out byte[] buffer)
+  {
+    int read;
+    if (ReadFile (handle, &buffer, buffer'size, &read, null) != 0)
+      return read;
+    return -GetLastError();
+  }
+  #end unsafe
+</PRE><hr>
+
+<p>In an unsafe section (between #begin unsafe and #end unsafe), you can use
+C's pointers with its operators (cast), & * -&gt; ++ -- != == &lt; &gt; &lt;= &gt;=.
+<p>You can declare functions that exist in external DLL's
+or declare callback functions that Windows can call.
+
+<hr><PRE>
+  #begin unsafe
+  [callback]
+  int MainWin (HWND hwnd, UINT message, WORD w, LONG l)
+  {
+    return 0;
+  }
+  #end unsafe
+</PRE><hr>
+
+<p>Furthermore, unsafe pointers are considered as packed types thus convertible to byte arrays.
+<p>The constant null indicates the pointer value zero.
+
+<br><br>
+
+<hr>
+
+
+<H2>Chapter 18 : add resources</H2>
+
+<br>
+<H3>18.1 what are resources ?</H3>
+
+<p>Resources are files added to a windows executable.
+They can contain for example :
+
+<ul>
+<li>a start icon
+<li>a manifest
+</ul>
+
+<br>
+<H3>18.2 how to create resources ?</H3>
+
+<p>To create icons, use tools provided by Microsoft.
+
+<p>A small tool extract.exe is provided with this compiler to extract all resources
+of a Windows EXE file. Once extracted, you can add them to your executable.
+
+The tool extract.exe will create a file corresponding to each resource, and it will display
+on the console the definition text of the resources.
+
+All you have to do is create an .RC file with notepad having the same name as your .EXE
+and add in it the definition text, and to put all files in the current directory, 
+so that the resources be added to your .EXE when you compile your program.
+
+<br><br><br>
+<H3>18.3 What's a manifest ?</H3>
+
+<p>Starting with the Vista version of Windows, some program names (for example those containing the word 'install')
+are automatically started in administrator mode (the user must provide a password).
+
+<p>To avoid this, you can add a manifest to the program.
+<a href=manifest.txt>Here's the manifest</a>.
+
+<p>
+You just have to create a .RC file and to add the following line :
+
+<p>1  24  manifest.txt
+
+<p>If you did everything correctly, your program won't ask for a password anymore when started.
+
+<br><br><br>
+***<br>
+<br>
+
+Here's another <a href=manifest2.txt>manifeste2</a> that combines :<br>
+ 1) not starting as Administrator, and<br>
+ 2) include the standard Windows controls (listbox, edit, ..).<br>
+<br>
+
+<hr>
+
+
+<H2>Annex A : create an internet server</H2>
+
+<br>
+<H3>A.1 A simple internet server</H3>
+
+<p>Here's a model to create a very simple internet server :
+<br><br><br>
+
+<hr>
+<PRE>
+// iserv1.c : internet server
+
+from std use strings, tcpip, http, tracing, exception;
+
+//-----------------------------------------------------------------------
+
+HTTP_SERVER_DATA  iserv;
+HTTP_INITIAL_DATA init;
+
+//-----------------------------------------------------------------------
+
+void handler (ref HANDLER_DATA p)
+{
+  handle_http_call (ref p, iserv, ref init);
+}
+
+//-----------------------------------------------------------------------
+
+void main()
+{
+  int rc;
+
+  arm_exception_handler();
+
+  open_trace ("iserv1.tra");
+
+
+  // init internet server
+
+  strcpy (out iserv.html_directory, "c:/www/");
+  strcpy (out iserv.start_url, "/home.html");
+  iserv.tracing = true;
+
+
+  // start server
+
+  trace ("============================================\n");
+  trace ("info: server starting.\n");
+
+  rc = serve_requests (port            =&gt; 80,
+                       request_handler =&gt; handler,
+                       max_handlers    =&gt; 512,
+                       mode            =&gt; MODE_DUAL,
+                       stop            =&gt; null,
+                       server_is_ready =&gt; null,
+                       incoming_call   =&gt; null,
+                       trace_calls     =&gt; true);
+
+  trace ("info: server stopping. rc=%d\n", rc);
+  trace ("============================================\n");
+}
+</PRE>
+<hr>
+
+<p>To test this program, create first a folder C:\WWW and put some html files in it
+(for example mapage.html).
+
+<p>Start then the server, then start Internet Explorer
+and type http://127.0.0.1/mapage.html  Your page should then display.
+
+<p>Note that you can also type http://[::1]/mapage.html because the server
+supports IPV6.
+
+<p>The server creates a trace file (iserv1.tra) that you can open with notepad
+to see the server's actions.
+
+<br><br><br><br>
+
+<br>
+<H3>A.2 Virtual pages</H3>
+
+<p>Here's how to create virtual pages, meaning pages that don't exist on the harddisk
+but that you have to create dynamically.
+
+<br><br><br>
+
+<hr>
+<PRE>
+
+// iserv2.c : internet server
+
+from std use strings, tcpip, http, tracing, exception;
+
+//-----------------------------------------------------------------------
+
+HTTP_SERVER_DATA  iserv;
+HTTP_INITIAL_DATA init;
+
+const uint WRITE_TIMEOUT = 30;  // write timeout : 30 secs
+
+//-----------------------------------------------------------------------
+
+bool is_virtual_page (int        nr,
+                      TCP_CLIENT tcp_client,
+                      string     url,      // virtual url
+                      ARG_INFO   args)     // http arguments
+{
+  _unused nr;          // suppresses warning that nr is unused
+  _unused tcp_client;
+
+  trace ("is_virtual_page (%s)\n", url);
+  return !get_http_physical_file_exists (args);
+}
+
+//-----------------------------------------------------------------------
+
+void handle_virtual_page (int            nr,
+                          ref TCP_CLIENT tcp_client,
+                          string         url,      // virtual url
+                          ARG_INFO       args)     // http arguments
+{
+  char str[1000];
+  _unused nr;
+  _unused args;
+
+  trace ("handle_virtual_page (%s)\n", url);
+
+  sprintf (out str, "&lt;HTML&gt;&lt;HEAD&gt;&lt;TITLE&gt;MY TITLE&lt;/TITLE&gt;&lt;/HEAD&gt;\r\n");
+  strcat (ref str, "&lt;BODY&gt;");
+  strcat (ref str, "Bonjour! Cette page est virtuelle !&lt;br&gt;");
+  strcat (ref str, "&lt;/BODY&gt;&lt;/HTML&gt;");
+
+  CS_write (ref tcp_client, str[0:strlen(str)], WRITE_TIMEOUT);
+}
+
+//-----------------------------------------------------------------------
+
+void handler (ref HANDLER_DATA p)
+{
+  handle_http_call (ref p, iserv, ref init);
+}
+
+//-----------------------------------------------------------------------
+
+void main()
+{
+  int rc;
+
+  arm_exception_handler();
+
+  open_trace ("iserv2.tra");
+
+
+  // init internet server
+
+  strcpy (out iserv.html_directory, "c:/www/");
+  strcpy (out iserv.start_url, "/home.html");
+  iserv.is_virtual_page     = is_virtual_page;
+  iserv.handle_virtual_page = handle_virtual_page;
+  iserv.tracing             = true;
+
+
+  // start server
+
+  trace ("============================================\n");
+  trace ("info: server starting.\n");
+
+  rc = serve_requests (port            =&gt; 80,
+                       request_handler =&gt; handler,
+                       max_handlers    =&gt; 512,
+                       mode            =&gt; MODE_DUAL,
+                       stop            =&gt; null,
+                       server_is_ready =&gt; null,
+                       incoming_call   =&gt; null,
+                       trace_calls     =&gt; true);
+
+  trace ("info: server stopping. rc=%d\n", rc);
+  trace ("============================================\n");
+}
+</PRE>
+<hr>
+
+
+<p>Two functions were added :
+
+<br><br>
+
+<h3>is_virtual_page() :</h3>
+<p>here the server gives you an url and ask if it must create a virtual page.
+We check using get_http_physical_file_exists()
+whether the page exist on the harddisk, and if it's not the case the function
+tells the server to call handle_virtual_page() to create a virtual page.
+
+<br><br>
+
+<h3>handle_virtual_page() :</h3>
+<p>here the server gives you an url and asks you to create a virtual page and to send its
+content using one or several CS_write().
+
+
+<br><br><br><br>
+
+<br>
+<H3>A.3 Parameters and forms</H3>
+
+<p>Here's an example that shows how to query parameters of an http request
+(for example the navigator's name) and also to receive a form's fields :
+
+<br><br><br>
+
+<hr>
+<PRE>
+
+// iserv3.c : internet server
+
+from std use calendar, files, strings, tcpip, http, tracing, exception;
+
+//-----------------------------------------------------------------------
+
+HTTP_SERVER_DATA  iserv;
+HTTP_INITIAL_DATA init;
+
+const uint WRITE_TIMEOUT = 30;  // write timeout : 30 secs
+
+//-----------------------------------------------------------------------
+
+bool is_virtual_page (int        nr,
+                      TCP_CLIENT tcp_client,
+                      string     url,      // virtual url
+                      ARG_INFO   args)     // http arguments
+{
+  _unused nr;          // suppresses warning that nr is unused
+  _unused tcp_client;
+  _unused url;
+
+  return !get_http_physical_file_exists (args);
+}
+
+//-----------------------------------------------------------------------
+
+void entete_html (out string str, string titre)
+{
+  sprintf (out str, "&lt;HTML&gt;&lt;HEAD&gt;&lt;TITLE&gt;");
+  strcatf (ref str, "%s", titre);
+  strcat  (ref str, "&lt;/TITLE&gt;&lt;/HEAD&gt;\r\n");
+}
+
+//-----------------------------------------------------------------------
+
+void fin_html (ref string str)
+{
+  strcat (ref str, "&lt;/BODY&gt;&lt;/HTML&gt;");
+}
+
+//-----------------------------------------------------------------------
+
+void page_home (ref TCP_CLIENT tcp_client, ARG_INFO args)
+{
+  char str[1000], browser[4096];
+
+  entete_html (out str, titre =&gt; "home");
+
+  strcat (ref str, "&lt;BODY&gt;");
+  strcat (ref str, "Bonjour !&lt;br&gt;&lt;br&gt;");
+  strcat (ref str, "Bienvenue sur mon nouveau serveur développé en Safe-C ");
+  strcat (ref str, "(le meilleur langage bien sûr)&lt;br&gt;&lt;br&gt;");
+
+  strcat (ref str, "Ah I can see your Navigateur is : ");
+
+  get_http_parameter (args, "User-Agent", out browser);
+
+  strcatf (ref str, "%s", browser);
+
+  strcat (ref str, "&lt;br&gt;&lt;br&gt;");
+
+  strcat (ref str, "&lt;a href=page1.html&gt; PAGE 1 &lt;/a&gt;");
+  strcat (ref str, "&lt;br&gt;&lt;br&gt;");
+  strcat (ref str, "&lt;a href=page2.html&gt; PAGE 2  (laisser un message)  &lt;/a&gt;");
+
+  fin_html (ref str);
+
+  CS_write (ref tcp_client, str[0:strlen(str)], WRITE_TIMEOUT);
+}
+
+//-----------------------------------------------------------------------
+
+void page_1 (ref TCP_CLIENT tcp_client)
+{
+  char str[1000];
+
+  entete_html (out str, titre =&gt; "page 1");
+
+  strcat (ref str, "&lt;BODY&gt;");
+  strcat (ref str, "Youpi !   Nous sommes sur la page 1 !&lt;br&gt;&lt;br&gt;");
+
+  strcat (ref str, "&lt;br&gt;&lt;br&gt;");
+  strcat (ref str, "&lt;a href=home.html&gt; HOME (revenir) &lt;/a&gt;");
+
+  fin_html (ref str);
+
+  CS_write (ref tcp_client, str[0:strlen(str)], WRITE_TIMEOUT);
+}
+
+//-----------------------------------------------------------------------
+
+void page_2 (ref TCP_CLIENT tcp_client)
+{
+  char str[2000];
+
+  entete_html (out str, titre =&gt; "page 2");
+
+  strcat (ref str, "&lt;BODY&gt;");
+  strcat (ref str, "Ah, here you will be able to leave me a message");
+  strcat (ref str, " to say what you think about my server ...&lt;br&gt;&lt;br&gt;");
+
+  strcat (ref str, "&lt;BODY&gt;");
+  strcat (ref str, "All messages will be stored in the file courier.txt on the server !&lt;br&gt;&lt;br&gt;");
+
+  strcat (ref str, "&lt;FORM Method=POST Action=/postez.html&gt;"
+                   + "&lt;INPUT Type=text Name=PAR1 Size=200 MaxLength=200 Value=''&gt;"
+                   + "&lt;INPUT Type=submit Value=' POSTEZ! '&gt;"
+                   + "&lt;/FORM&gt;");
+
+  fin_html (ref str);
+
+  CS_write (ref tcp_client, str[0:strlen(str)], WRITE_TIMEOUT);
+}
+
+//-----------------------------------------------------------------------
+
+void handle_virtual_page (int            nr,
+                          ref TCP_CLIENT tcp_client,
+                          string         url,      // virtual url
+                          ARG_INFO       args)     // http arguments
+{
+  _unused nr;
+
+  if (strcmp (url, "/home.html") == 0)
+    page_home (ref tcp_client, args);
+  else if (strcmp (url, "/page1.html") == 0)
+    page_1 (ref tcp_client);
+  else if (strcmp (url, "/page2.html") == 0)
+    page_2 (ref tcp_client);
+}
+
+//-----------------------------------------------------------------------
+
+void postez (ref TCP_CLIENT tcp_client, ARG_INFO args)
+{
+  char str[1000];
+  char par1[240], par2[1000];
+
+  entete_html (out str, titre =&gt; "postez");
+
+  strcat (ref str, "&lt;BODY&gt; Nous avons bien reçu votre commentaire : &lt;br&gt;&lt;br&gt;");
+
+  get_post_parameter (args, "PAR1", out par1);
+
+  // write into a file
+  {
+    FILE          file;
+    PEER          info;
+    char[40]      ipstr;
+    DATE_TIME     now;
+
+    TCP_query_remote_address (tcp_client, out info);
+    ip_to_numericstr (info.ip, out ipstr);
+    get_datetime (out now);
+
+    if (fappend (out file, "courier.txt", UTF8) == 0)
+    {
+      fprintf (ref file, "-------------------------------------------------------\n");
+      fprintf (ref file, "Comment received from %s:%u on %02d/%02d/%04d :\n",
+               ipstr, info.port, now.day, now.month, now.year);
+      fprintf (ref file, "%s\n", par1);
+      fprintf (ref file, "-------------------------------------------------------\n");
+      fclose (ref file);
+    }
+  }
+
+  // convert posted text to avoid hacking
+  expand_html (par1, out par2);
+  strcat (ref str, par2);
+
+  strcat (ref str, "&lt;br&gt;&lt;br&gt;");
+  strcat (ref str, "&lt;a href=home.html&gt; HOME (revenir) &lt;/a&gt;");
+
+  fin_html (ref str);
+
+  CS_write (ref tcp_client, str[0:strlen(str)], WRITE_TIMEOUT);
+}
+
+//-----------------------------------------------------------------------
+
+void handle_post_request (int            nr,
+                          ref TCP_CLIENT tcp_client,
+                          string         url,      // virtual url, ex: "/getlist"
+                          ARG_INFO       args)     // post & http arguments
+{
+  _unused nr;
+
+  if (strcmp (url, "/postez.html") == 0)
+    postez (ref tcp_client, args);
+}
+
+//-----------------------------------------------------------------------
+
+void handler (ref HANDLER_DATA p)
+{
+  handle_http_call (ref p, iserv, ref init);
+}
+
+//-----------------------------------------------------------------------
+
+void main()
+{
+  int rc;
+
+
+  arm_exception_handler();
+
+  open_trace ("iserv.tra");
+
+
+  // init internet server
+
+  strcpy (out iserv.html_directory, "c:/www/");
+  strcpy (out iserv.start_url, "/home.html");
+  iserv.is_virtual_page     = is_virtual_page;
+  iserv.handle_virtual_page = handle_virtual_page;
+  iserv.handle_post_request = handle_post_request;
+  iserv.tracing             = true;
+
+
+  // start server
+
+  trace ("============================================\n");
+  trace ("info: server starting.\n");
+
+  rc = serve_requests (port            =&gt; 80,
+                       request_handler =&gt; handler,
+                       max_handlers    =&gt; 512,
+                       mode            =&gt; MODE_DUAL,
+                       stop            =&gt; null,
+                       server_is_ready =&gt; null,
+                       incoming_call   =&gt; null,
+                       trace_calls     =&gt; true);
+
+  trace ("info: server stopping. rc=%d\n", rc);
+  trace ("============================================\n");
+}
+
+
+</PRE>
+<hr>
+
+<br><br>
+
+Don't hesitate to read the description of the components 'http' and 'tcpip' of
+library std for other functions.
+
+<br><br><br>
+
+
+<hr>
+
+
+<H2>Annex B : files and generic packages</H2>
+
+<br>
+<p>The following program lists all files of a folder,
+stores them in a binary tree, and displays them in order :
+<br><br><br>
+
+<hr>
+<PRE>
+// p.c : list files, store them in a binary tree, and display them in order.
+
+from std use exception, strings, bintree, files, console;
+
+typedef string^ PSTRING;   // pointeur vers string
+
+package P = new BALANCED_BINARY_TREE (ELEMENT => PSTRING, USER_INFO => int);
+
+int compare (int^ line, PSTRING a, PSTRING b)
+{
+  _unused line;
+  return stricmp (a^, b^);
+}
+
+int print_element (int^ line, PSTRING p)
+{
+  printf ("file %d : %s\n", line^++, p^);
+  return 0;
+}
+
+int free_element (int^ line, PSTRING p)
+{
+  _unused line;
+  free p;
+  return 0;
+}
+
+void main()
+{
+  P.BINARY_TREE t;
+  int^          pline = new int;
+  int           rc;
+  FILE_INFO     info;
+  string^       p;
+
+  arm_exception_handler();
+
+
+  create_btree (out t, pline, compare);
+
+
+
+  rc = open_directory (out info, "c:/temp/*.*");
+  while (rc == 0)
+  {
+    if (info.type == TYPE_REGULAR_FILE)
+    {
+      p = new string ' (info.name[0 : strlen(info.name)]);
+      rc = insert_btree (ref t, p);
+      assert rc == 0;
+    }
+
+    rc = read_directory (ref info);
+  }
+
+  if (rc != NO_MORE_FILES)
+    printf ("problem reading directory\n");
+
+  close_directory (ref info);
+
+
+
+  // walk the tree and display all its elements in order
+  pline^ = 1;
+  rc = traverse_btree (ref t, print_element, order => +1);
+  assert rc == 0;
+
+
+  // to delete the tree, you have to walk it first to free all its strings
+  rc = traverse_btree (ref t, free_element, order => +1);
+  assert rc == 0;
+
+  // then you can delete it
+  close_btree (ref t);
+}
+</PRE>
+
+<br>
+<hr>
+
+
+<H2>Annex C : display a picture in a window</H2>
+
+<br>
+<p>The following program displays a picture in a window :
+<br><br><br>
+
+<hr>
+<PRE>
+
+// show.c : afficheur d'images
+  
+from std use exception, files, image, win;
+
+//======================================================================================
+
+int load_my_image (string filename, int id)
+{
+  IMAGE_INFO image;
+  int        x_res, y_res;
+  
+  window_get_resolution (out x_res, out y_res, id);
+ 
+  if (load_image (out image, filename) &lt; 0)
+    return -1;
+
+  assert resize_image (ref image, (uint)x_res, (uint)y_res) == 0;
+  window_raster (0, 0, x_res, y_res, image.pixel^, id);
+  free_image (ref image);
+  
+  return 0;
+}
+
+//======================================================================================
+
+void main()
+{
+  int left, top, right, bottom;
+  bool quit = false;
+
+  arm_exception_handler();
+  
+  get_screen_borders (out left, out top, out right, out bottom);
+  
+  create_screen (x =&gt; 100, y =&gt; 100, x_size =&gt; left+right+600, y_size =&gt; top+bottom+500, title =&gt; "Test");
+
+  create_window (x =&gt; 2, y =&gt; 2, x_size =&gt; 400, y_size =&gt; 400, id =&gt; 100);
+  
+  create_button (x =&gt; 410, y =&gt; 20, x_size =&gt; 100, y_size =&gt; 30, text =&gt; " Load ", id =&gt; 10);
+  create_button (x =&gt; 410, y =&gt; 60, x_size =&gt; 100, y_size =&gt; 30, text =&gt; " Exit ", id =&gt; 20);
+  
+  while (!quit)
+  {
+    EVENT event;
+    get_event (out event);
+    switch (event.typ)
+    {
+      case EVENT_BUTTON_PRESSED:
+        switch (event.id)
+        {
+          case 10:
+            {
+              char filename[MAX_FILENAME_LENGTH];
+              
+              if (select_filename (    dialog_title     =&gt; "Load",
+                                       mask             =&gt; "images=*.jpg;*.bmp;*.gif\n",
+                                       saving           =&gt; false,     // false=load, true=save
+                                   out filename         =&gt; filename,
+                                       default_filename =&gt; "") == 0)
+              {
+                load_my_image (filename, id =&gt; 100);
+              }
+            }
+            break;
+            
+          case 20:
+            quit = true;
+            break;
+            
+          default:
+            break;
+        }
+        break;
+        
+      default:
+        break;
+    }
+  }
+  
+  close_screen ();
+}
+
+//======================================================================================
+
+</PRE>
+
+<br>
+<hr>
+
+
+
+
+<script>
+window.onload = function () {
+    var toc = "";
+    var level = 0;
+
+    document.getElementById("contents").innerHTML =
+        document.getElementById("contents").innerHTML.replace(
+            /<h([\d])>([^<]+)<\/h([\d])>/gi,
+            function (str, openLevel, titleText, closeLevel) {
+                if (openLevel != closeLevel) {
+                    return str;
+                }
+
+                if (openLevel > level) {
+                    toc += (new Array(openLevel - level + 1)).join("<ul>");
+                } else if (openLevel < level) {
+                    toc += (new Array(level - openLevel + 1)).join("</ul>");
+                }
+
+                level = parseInt(openLevel);
+
+                var anchor = titleText.replace(/ /g, "_");
+                toc += "<li><a href=\"#" + anchor + "\">" + titleText
+                    + "</a></li>";
+
+                return "<h" + openLevel + "><a name=\"" + anchor + "\">"
+                    + titleText + "</a></h" + closeLevel + ">";
+            }
+        );
+
+    if (level) {
+        toc += (new Array(level + 1)).join("</ul>");
+    }
+
+    document.getElementById("toc").innerHTML += toc;
+};
+</script>
+
+</body>
+</html>

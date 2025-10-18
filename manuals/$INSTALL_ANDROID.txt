@@ -1,0 +1,578 @@
+
+Install Android
+===============
+
+0. How to compile for Android
+-----------------------------
+
+Developping for Android is much harder than PC/Windows. 
+You will get headaches from configuration problems.
+
+In Android you can launch ONLY Java programs.
+However the Java program can link with shared libraries (.so) compiled in other languages.
+
+The Safe-C compiler must thus produce a .so shared library.
+For example your program MUST be called "libsafec.c" and compile into "libsafec.so"
+
+You compile on PC/Windows, then you use a batch to sign+load the program
+into your android phone and run it. That's explained below.
+
+--------------------------------------------------------------------------
+
+1. Build a first App
+--------------------
+
+- install android studio 64
+
+- create new project of type "Game Activity C/C++"
+  - click next
+
+  - Name    : enter your project name (ex: Planet Samuro)
+  - Language: Java
+  - Minimum SDK : API 30
+
+  - Next
+  - Finish
+  - click on "Automatically" bottom right, to exclude the source paths in Windows Defender
+  - Confirm YES
+
+- CTRL-F9 : Make the solution
+
+--------------------------------------------------------------------------
+
+2. Run a first App
+------------------
+
+- SHIFT-F10 (Run) to run the solution
+
+  Error: Update this project to use a newer compileSdk of at least 36, for example 36.
+  -> Menu "File / Project Structure" / Modules / Properties
+      Compile Sdk Version : 36  (34 or 35 gives a compile error ?)
+  -> try again SHIFT-F10 (Run) to run the solution
+
+- CTRL-F2 (Stop Run) to stop the application
+
+- see also Icons on bottom left (Hammer to Build), (> to Run), Cat to see logging
+
+--------------------------------------------------------------------------
+
+3. Change minimum SDK
+---------------------
+We want to compile Android App that run on API level 21, that's Android 5.0 (Lollipop).
+They are the first to support OpenGL ES 3.1
+
+-> menu Files / Project Structure / Modules / Default Config : change Min SDK Version to 21
+
+
+( check if the following changes occured :
+
+    Navigate to the build.gradle file inside the app module (app/build.gradle.kts)
+    check that xml looks like this :
+
+              android {
+                  namespace = "com.example.planetsamuro"
+                  compileSdk = 36
+
+                  defaultConfig {
+                      applicationId = "com.example.planetsamuro"
+                      minSdk = 21     <--------------------------------------------
+                      targetSdk = 34
+                      versionCode = 1
+                      versionName = "1.0"
+
+
+- CTRL-F9 : Make the solution
+
+    you will notice errors :
+
+      C:/Users/marcs/AndroidStudioProjects/MyApplication/app/src/main/cpp/TextureAsset.cpp:16:19:
+        error: 'AImageDecoder_createFromAAsset' is unavailable: introduced in Android 30
+
+    because jnigraphics was introduced only in Android 30.
+    So what we will do it remove jnigraphics as we don't really need it.
+
+  Action:
+
+    - remove many files : in folder cpp, keep only : includes, CMakeLists.txt and main.cpp
+
+    - in CMakeLists.txt, remove the line 'jnigraphics'
+
+    - delete app\src\main\assets\android_robot.png
+
+    - replace all code in main.cpp by our C++ application :
+
+--------------------------------------------------------------------------
+
+// main.cpp
+
+#include <jni.h>
+#include <game-activity/GameActivity.cpp>
+#include <game-text-input/gametextinput.cpp>
+
+/*----------------------------------------------------------------------------*/
+
+extern "C" {
+#include <dlfcn.h>
+#include <game-activity/native_app_glue/android_native_app_glue.c>
+
+/*----------------------------------------------------------------------------*/
+
+const int EVENT_INITIALIZE   =   1;
+const int EVENT_RENDER_FRAME =  10;
+const int EVENT_TERMINATE    = 999;
+
+static int (*fsafec_event)(android_app *pApp, int event_nr);
+
+#define LOG_TAGS "Safe-C-Logging"
+#define LOG(...) ((void)__android_log_print(ANDROID_LOG_FATAL, LOG_TAGS, __VA_ARGS__))
+
+/*----------------------------------------------------------------------------*/
+
+static int init_safec_so ()
+{
+    const char *lib = "libsafec.so";
+    void *hso = dlopen (lib, RTLD_NOW);
+    if (hso == NULL)
+    {
+        LOG ("FATAL ERROR: dlopen(libsafec.so) failed: %s", dlerror());
+        return -1;
+    }
+
+    const char *func = "safec_event";
+    fsafec_event = (int (*)(android_app *pApp, int)) dlsym(hso, func);
+    if (fsafec_event == NULL)
+    {
+        LOG ("FATAL ERROR: dlsym(%s,%s) failed: %s", lib, func, dlerror());
+        return -1;
+    }
+
+    return 0;
+}
+
+/*----------------------------------------------------------------------------*/
+
+void handle_cmd (android_app *pApp, int32_t cmd)
+{
+    switch (cmd)
+    {
+        case APP_CMD_INIT_WINDOW:      // A new window is created
+            fsafec_event(pApp, EVENT_INITIALIZE);
+            pApp->userData = (void*)1;   // now loop downstairs renders frames
+            break;
+
+
+        case APP_CMD_TERM_WINDOW:      // The window is being destroyed.
+            if (pApp->userData)   // initialization was done ?
+            {
+                pApp->userData = (void*)0;   // no longer render frames
+                fsafec_event(pApp, EVENT_TERMINATE);
+            }
+            break;
+
+        default:
+            break;
+    }
+}
+
+/*----------------------------------------------------------------------------*/
+
+// This the main entry point for a native activity
+
+void android_main(struct android_app *pApp)
+{
+    if (init_safec_so () < 0)
+        return;
+
+    pApp->onAppCmd = handle_cmd;
+
+    // This sets up a typical game/event loop. It will run until the app is destroyed.
+    for (;;)
+    {
+        // Process all pending events before running game logic.
+        bool done = false;
+
+        while (!done)
+        {
+            int                 timeout, events, result;
+            android_poll_source *pSource;
+
+            timeout = 0;    // 0 is non-blocking.
+            result = ALooper_pollOnce (timeout, nullptr, &events, reinterpret_cast<void**>(&pSource));
+
+            switch (result)
+            {
+                case ALOOPER_POLL_TIMEOUT:
+                    [[clang::fallthrough]];
+                case ALOOPER_POLL_WAKE:
+                    // No events occurred before the timeout or explicit wake. Stop checking for events.
+                    done = true;
+                    break;
+
+                case ALOOPER_EVENT_ERROR:
+                    break;
+
+                case ALOOPER_POLL_CALLBACK:
+                    break;
+
+                default:
+                    if (pSource)
+                        pSource->process(pApp, pSource);
+                    break;
+            }
+        }
+
+        if (pApp->userData)
+        {
+            // Render a frame
+            fsafec_event(pApp, EVENT_RENDER_FRAME);
+        }
+
+        if (pApp->destroyRequested)
+            break;
+    }
+}
+
+/*-----------------------------------------------------------------------*/
+}  // extern "C"
+/*----------------------------------------------------------------------------*/
+
+
+--------------------------------------------------------------------------
+
+4. Change AndroidManifest.xml
+-----------------------------
+
+<manifest xlmns:android...>
+ ...
+ <uses-permission android:name="android.permission.INTERNET" />     <------- ADD to use internet
+ <application ...
+
+...
+
+ android:name=".MainActivity"
+ android:screenOrientation="landscape"          <-------- ADD to force landscape
+
+--------------------------------------------------------------------------
+
+5. Add an Icon
+--------------
+
+press CTRL-F9 to Make the solution
+
+AAPT: error: <adaptive-icon> elements require a sdk version of at least 26.
+
+we need to redo a fresh Icon, as follows :
+
+    1. Create Legacy & Adaptive Icons
+
+    Right-click on the res folder in your project.
+    Navigate to New > Image Asset.
+    In the Asset Studio window:
+    Select Launcher Icons (Adaptive and Legacy).
+    Provide a foreground layer (e.g., your app logo) and a background layer (e.g., a solid color or image).
+    Adjust the scaling (53%) and padding as needed.
+
+    background color 0 162 232   ( 00A2E8 )
+
+    Click Next and then Finish to generate the necessary files.
+
+
+    2. Update the Manifest
+    Ensure your AndroidManifest.xml references the adaptive icon:
+
+
+    Copier le code
+    <application
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        ... >
+    </application>
+
+
+    @mipmap/ic_launcher is the default adaptive icon.
+    @mipmap/ic_launcher_round is optional for devices that use round icons.
+
+
+--------------------------------------------------------------------------
+
+6. Create a production APK package
+----------------------------------
+
+note: to generate keys, see below
+
+- Build / "Generate Signed App Bundle/Apk"
+  . select APK
+  . Next
+  . Create New
+    . Key Store Path : C:\Android\MyKeys.jks    or  C:\androidkeys\MyKeys.jks
+    . Password: 123456
+    . Validy : 99 years
+    . OK
+  . Key store password: 123456
+  . Key alias         : key0
+  . Key password      : 123456
+  . enable 'Remember Password'
+  . Next
+
+  . destination folder : C:\Android
+  . release
+  . Create
+
+- output is in : C:\Android\release\app-release.apk
+
+  note: apk files can be opened with any zip tool
+
+  Folder "\lib\arm64-v8a\" contains the shared library with Aarch64 assembler code.
+
+--------------------------------------------------------------------------
+
+7. Compile/Execute in Safe-C
+----------------------------
+
+a) Android studio must generate a file "app-release.apk" that you put in the current folder.
+b) Your Safe-C program MUST be called "libsafec.c" and compile into "libsafec.so"
+   (you must never rename the .so file after compilation as the compiler stores its name in the elf format !)
+
+        mk libsafec.c cfg=android.cfg crc %1
+
+   with android.cfg containing :
+
+        [options]
+        target          = android   ; intel or android
+        memory_model    = 64        ; 32 or 64 (default is 64)
+        pointer_check   = yes       ; default is yes
+        array_check     = yes       ; default is yes
+        assertion_check = yes       ; default is yes
+
+    %1 can be replaced by prod when compiling for production, identical strings are then merged but that compiles slowlier.
+
+c) zipadd.exe is provided in the compiler tools.
+    zipadd.exe
+       add file in zip archive
+       format: zipadd <android_filename_to_add>  <pc_filename_to_add>  <source_zip>  <target_zip>
+
+d) zipalign.exe, apksigner.bat and adb.exe must be downloaded
+   from https://developer.android.com/studio/releases/build-tools.html
+
+e) make sure developer mode is enable on your phone (search on the internet how to do that)
+f) connect your phone to PC using an USB cable, 
+g) use the following batch :
+
+      cls
+      mk libsafec.c cfg=android.cfg crc %1
+      if %ERRORLEVEL% NEQ 0 goto :ending
+
+      zipadd lib\arm64-v8a\libsafec.so libsafec.so app-release.apk app-release.tmp1
+      zipadd assets\libsafec.dbg libsafec.dbg app-release.tmp1 app-release.tmp2
+
+      C:\Users\marcs\AppData\Local\Android\Sdk\build-tools\35.0.0\zipalign -P 16 -f 4 app-release.tmp2 app-release.tmp3
+
+      set JAVA_HOME=C:\Program Files\Android\Android Studio\jbr
+      call C:\Users\marcs\AppData\Local\Android\Sdk\build-tools\34.0.0\apksigner sign --min-sdk-version 21 --key key0.p8 --cert Marc_Samuro.cer --ks-pass pass:123456 --out planetsamuro.apk app-release.tmp3
+
+      del app-release.tmp?
+
+      C:\Users\marcs\AppData\Local\Android\Sdk\platform-tools\adb logcat -c
+
+      C:\Users\marcs\AppData\Local\Android\Sdk\platform-tools\adb install -t planetsamuro.apk
+
+      C:\Users\marcs\AppData\Local\Android\Sdk\platform-tools\adb shell am start -n com.example.planetsamuro/com.example.planetsamuro.MainActivity
+          
+      PAUSE
+
+      C:\Users\marcs\AppData\Local\Android\Sdk\platform-tools\adb shell am force-stop com.example.planetsamuro
+
+      C:\Users\marcs\AppData\Local\Android\Sdk\platform-tools\adb logcat -d Safe-C-Log:V libc:E libm:E libdl:E *:F >logcat.txt
+      rem C:\Users\marcs\AppData\Local\Android\Sdk\platform-tools\adb logcat -d >logcat.txt
+
+      "C:\Program Files\Notepad++\notepad++.exe" logcat.txt
+      :ending
+
+--------------------------------------------------------------------------
+
+8. Generating Keys
+------------------
+
+
+
+
+
+--------------------------------------------------------------------------
+
+9. The final XML
+----------------
+
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.PlanetSamuro">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="landscape"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="planetsamuro" />
+        </activity>
+    </application>
+
+</manifest>
+
+------------------------------------------------------------------------------------------
+
+10. Example Safe-C app
+----------------------
+
+    // libsafec.c
+
+    from std use exception, draw3d, tracing, android/android;
+    use planet_client;
+
+    //---------------------------------------------------------------------
+    #begin unsafe
+    //---------------------------------------------------------------------
+
+    bool g_init_done;
+
+    //---------------------------------------------------------------------
+
+    // event type is called with (EVENT_INITIALIZE, EVENT_RENDER_FRAME or EVENT_TERMINATE)
+
+    [entry]
+    int safec_event (android_app *app, int event_type)
+    {
+      if (!g_init_done)  // on first run only
+      {
+        g_init_done = true;
+
+        init_android (app);   // save some app pointers and set current directory (must be done before arming exception handler)
+
+        arm_exception_handler ();
+
+        open_trace ("dummy-trace");
+
+        // init opengl so that dialogs can be displayed
+        draw3d . event_3D (app, EVENT_INITIALIZE);
+
+        // init application, init draw3 functions, starting a window thread.
+        planet_client . planet_client_main ();
+
+        return 0;   // finish
+      }
+
+      // draw3d thread (EVENT_INITIALIZE, EVENT_RENDER_FRAME or EVENT_TERMINATE)
+      draw3d . event_3D (app, event_type);
+
+      return 0;
+    }
+
+    //---------------------------------------------------------------------
+    #end unsafe
+    //---------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------------------
+
+11. Java Code to receive a data file
+------------------------------------
+
+package com.example.planetsamuro;
+
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
+
+import com.google.androidgamesdk.GameActivity;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+public class MainActivity extends GameActivity {
+    static {
+        System.loadLibrary("planetsamuro");
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        if (hasFocus) {
+            hideSystemUi();
+        }
+    }
+
+    private void hideSystemUi() {
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+        );
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            Uri fileUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+            if (fileUri != null) {
+                saveBinaryFile(fileUri);
+            }
+        }
+    }
+
+    private void saveBinaryFile(Uri uri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            File outFile = new File(getFilesDir(), "INVENTORY.DB.NEW");
+            OutputStream outputStream = new FileOutputStream(outFile);
+
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+
+            inputStream.close();
+            outputStream.close();
+
+        } catch (Exception e) {
+        }
+    }
+}
+
+------------------------------------------------------------------------------------------

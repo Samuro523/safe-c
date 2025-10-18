@@ -1,0 +1,949 @@
+<html>
+<head>
+  <title>Safe-C Programming Language</title>
+<meta http-equiv="expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body { font: bold 1.0em Arial; color: #000080; }
+pre { font: bold 1.0em/100% 'Courier New'; color: black; }
+h1 { color: #A00000; }
+h2 { color: #408000; }
+h3 { color: #802000; }
+@media (max-width: 599px) { img {max-width: 100%; width: 100%; }}
+@media (min-width: 600px) {}
+</style>
+
+<body>
+
+<H1>Safe-C Programming Language</H1>
+<H2>Tutorial for developers who already know C</H2>
+
+<hr>
+
+<p>Here's a Safe-C program :
+<br><br>
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+// date.c
+
+from std use calendar, console;
+
+void main()
+{
+  DATE_TIME now;
+
+  get_datetime (out now);
+
+  printf ("We are the %02d/%02d/%04d ", now.day, now.month, now.year);
+  printf ("and it is %02d:%02d:%02d.\n", now.hour, now.min, now.sec);
+}
+</PRE>
+</td></tr></table>
+
+<p><b>Compilation</b><br><br>
+As in C, a Safe-C program uses the file extensions .h
+for the interfaces and .c for the program bodies.
+
+The "make" is integrated in the compiler :
+when compiling you need only give to the compiler the name of the main .c file
+and it will follow automatically the include path of libraries
+(from std use xxx;) or of local files (use yyy;).
+
+<br><br>
+<p><b>Compilation units</b><br><br>
+
+The .h and .c files of a component must always be stored in the same folder
+so that the compiler can find them. It's not necessary to import the .h file into the
+corresponding .c file, the compiler will do it automatically.<br>
+<br>
+Example:<br>
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+// data.h
+
+float global_delta = 1.0;  // public variable
+const int MAX = 100;       // public constant
+void insert (int element); // public function
+</PRE>
+</td></tr></table>
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+// data.c
+
+int i = 0;
+int table[MAX];
+
+public void insert (int element)  // public function body
+{
+  table[i++] = element;
+}
+</PRE>
+</td></tr></table>
+
+Contrarily to C, we don't use the keywords <B>static</B> and <B>extern</B>.<br>
+Variables declared in .h files need no longer be declared a second time in the .c file.<br>
+Instead of using the keyword <b>static</b> for functions that are intern to a file
+we will use the keyword <B>public</B> to declare functions that are visible outside a file.<br>
+Note that the keyword <B>public</B> is never used in .h files because everything in it is public anyway.<br>
+<br>
+Here's an example of use of our component 'data' :<br>
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+// main.c
+
+from std use console;
+use util/data;         // component data is stored in the sub-folder "util"
+
+void main()
+{
+  global_delta = 2.0;
+
+  printf ("MAX = %d\n", MAX);
+
+  insert (1);
+  insert (element => 2);   // call with explicit parameter name
+  data.insert (3);         // call with prefixed component name
+}
+</PRE>
+</td></tr></table>
+
+<br>
+
+<p><b>Initialisation of variables</b><br><br>
+All local variables must be initialized at their first use, including
+arrays and structures that must receive an initial full value.
+This can done with the instruction <b>clear</b> which replaces
+C's "<b>memset (&v, 0x00, sizeof(v));</b>", or by assigning a complete aggregate like :<br><br>
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+void main()
+{
+  int tab[3];
+
+  clear tab;          // all elements to 0
+
+  tab = {all => 5};   // all elements to 5
+
+  tab = {5, 6, 7};    // assignment of a full aggregate
+}
+</PRE>
+</td></tr></table>
+
+<br>
+Structures must likewise be initialized :<br><br>
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+void main()
+{
+  struct KEY
+  {
+    int  nr;
+    char c;
+  }
+
+  KEY k;
+
+  clear k;              // all elements to 0
+
+  k = {1, 'a'};         // simple aggregate
+
+  k = {nr=>1, c=>'a'};  // aggregate with names
+}
+</PRE>
+</td></tr></table>
+
+<br><br>
+<p><b>Data Types</b><br><br>
+Here's a fast overview of all data types :<br>
+<ul>
+<li>signed integers : int1, int2, int4, int8
+  and their aliases: tiny, short, int, long.<br>
+<li>unsigned integers : uint1, uint2, uint4
+  and their aliases: byte, ushort and uint.<br>
+<li>enumeration types: char, wchar, bool.<br>
+<li>floating types: float and double.<br>
+<li>array, struct, union, safe pointer(^), unsafe pointer(*), pointer to function, opaque, generic.<br>
+</ul>
+
+<br>
+Arrays are declared like in C, with however a small difference :
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+void main()
+{
+  char     t1[10], t2[10];
+  char[10] t1, t2;
+}
+</PRE>
+</td></tr></table>
+
+The two declaration lines above are identical because what's specified
+on the left with the type applies to all identifiers on the right.
+It is allowed to combine both syntaxes.<br>
+<br>
+
+<br>
+You can declare an array type of unspecified length, for example <b>string</b> is predefined as :
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+typedef char[] string;
+</PRE>
+</td></tr></table>
+
+hence the following four declarations are identical :
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+void main()
+{
+  char[100]   buffer1;
+  string(100) buffer2;
+  char        buffer3[100];
+  string      buffer4(100);
+}
+</PRE>
+</td></tr></table>
+<br><br>
+
+<p><b>Parameters Modes</b><br><br>
+
+There are 3 parameter modes:<br>
+<ul>
+<li>in (simple types are passed by value, arrays and struct by address)<br>
+<li>ref (by address)<br>
+<li>out (by address also)<br>
+</ul>
+
+Parameters of mode 'in' are read-only, they cannot be assigned a new value.<br>
+Parameters of mode 'ref' have no restrictions.<br>
+Parameters of mode 'out' are considered as non-initialized variables,
+they must receive a full value before the function ends.<br>
+<br>
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+void foo (int i, ref int j, out int k)
+{
+  k = i + j;
+}
+</PRE>
+</td></tr></table>
+
+A function call looks like this, by repeating the mode :
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+void main ()
+{
+  int i, j, k;
+
+  i = 1;
+  j = 2;
+
+  foo (i, ref j, out k);
+}
+</PRE>
+</td></tr></table>
+
+<br>
+So you can see that, contrarily to C, you don't use any & or * symbols.
+<br><br><br>
+
+Arrays are passed like this :
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+void foo1 (char[10] str);
+void foo2 (char[] str);
+void foo3 (string str);
+</PRE>
+</td></tr></table>
+
+Function foo1 accepts only arrays of char of length 10 :
+at execution time, only an address is passed on the stack.<br>
+<br>
+Function foo2 accepts arrays of char of any length :
+at execution time, the address and the length are passed on the stack,
+so that the array length can be queried and checked within the function.<br>
+<br>
+Function foo3 is equivalent to foo2 but more pleasant to read.
+<br><br><br>
+
+<p><b>Attributes</b><br><br>
+
+The attribute 'length allows you to take the length of any array :
+
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+void main()
+{
+  char tab[3];
+  int  i;
+
+  i = tab'length;   // 3
+</PRE>
+</td></tr></table>
+
+<br>
+Attributes 'min and 'max allow you to take the minimum/maximum of an integer type :
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+void main()
+{
+  int i, petit, grand;
+
+  petit = i'min;   // -2_147_483_648
+  grand = i'max;   // +2_147_483_647
+}
+</PRE>
+</td></tr></table>
+
+
+<br>
+Attributes 'first and 'last allow you to take the first/last value of an enumeration type :
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+void main()
+{
+  enum COLOR {RED, GREEN, BLUE};
+
+  COLOR a, b;
+
+  a = COLOR'first;   // RED
+  b = a'last;        // BLUE
+}
+</PRE>
+</td></tr></table>
+
+<br>
+Attribute 'string allow you to convert an enumeration value into a string representing its literal,
+which is useful when you pass these types in printf when debugging ...
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+void main()
+{
+  enum COLOR {RED, GREEN, BLUE};
+  COLOR c = RED;
+  printf ("c = %s\n", c'string);
+  printf ("first color = %s\n", COLOR'first'string);
+}
+</PRE>
+</td></tr></table>
+
+<br><br>
+<p><b>Slices</b><br><br>
+
+A slice of an array is like a slice of bread. It has a beginning and a length :
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  string(5) s;
+  string(2) t;
+
+  s = "Hello";
+  t = s[3:2];        // copies "lo" (start=3, length=2)
+  s[1:4] = "ELLO";   // keeps the H but changes the rest
+
+</PRE>
+</td></tr></table>
+Array indexes and slices are checked and generate a fatal error in case of illegal values.
+
+<br><br><br>
+<p><b>Strings</b><br><br>
+
+The component <b>'strings'</b> contains well-know functions : strcpy, strcat, sprintf, etc ..<br>
+It is noteworthy that, contrarily to C, the ending nul character is optional.<br>
+So if you use strcpy() to copy "Hello" into a string of length 5,
+there will be no ending nul character.
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+from std use strings;
+
+void main()
+{
+  string(64) str, str2;
+  int        i = 2, j = 3, len;
+
+  sprintf (out str, "value of i is : %d", i);
+  sprintf (out str2, " and j equals : %d", j);
+  strcat (ref str, str2);
+  len = strlen (str);
+}
+</PRE>
+</td></tr></table>
+If you do a strcpy of a string of length 6 into a table of length 5, you will get a fatal error.<br>
+
+<br><br>
+<p><b>Constants</b><br><br>
+
+The following C declarations :
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  #define MAX   100
+  #define TITLE "programme.c"
+</PRE>
+</td></tr></table>
+
+will be written as follows in Safe-C :
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  const int    MAX   = 100;
+  const string TITLE = "programme.c";
+</PRE>
+</td></tr></table>
+
+<br><br>
+<p><b>Jagged arrays</b><br><br>
+
+The following C declaration :
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  char *table[] = {"This", "is", "an", "example"};
+</PRE>
+</td></tr></table>
+
+will be written in Safe-C as :
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  const string table[] = {"This", "is", "an", "example"};
+</PRE>
+</td></tr></table>
+
+
+You can obtain the number of strings using table'length.
+
+
+<br><br><br>
+<p><b>structures</b><br><br>
+
+Structures are declared almost like in C :
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  struct PERSON
+  {
+    char[20]  name;
+    int       age;
+  }
+
+  PERSON per;
+</PRE>
+</td></tr></table>
+
+<br><br>
+Furthermore, there exist special structures featuring a 'discriminant' of type enumeration :
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+    enum TypeShape {POINT, SQUARE, CIRCLE, TRIANGLE};
+
+    struct Shape (TypeShape kind)
+    {
+      int x, y;
+
+      switch (kind)
+      {
+        case POINT:
+          null;
+
+        case SQUARE:
+          int side;
+
+        case CIRCLE:
+          int radius;
+
+        case TRIANGLE:
+          int base, height;
+      }
+    }
+
+    Shape(SQUARE) s = {x=>1, y=>2, side=>3};
+
+</PRE>
+</td></tr></table>
+
+The size of the structure depends on the discriminant value when the variable is created.
+The compiler does never allocate the maximum length but only the length for the given variant.
+
+
+<br><br>
+
+Variant structures can be passed as parameters :
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  void foo1 (Shape(POINT) p)
+  {
+    // ...
+  }
+
+  void foo2 (Shape s)
+  {
+    switch (s.kind)
+    {
+      case POINT:
+        // ...
+        break;
+    }
+  }
+</PRE>
+</td></tr></table>
+
+Function foo1 will accept only a Shape of type POINT,
+whereas foo2 will accept any variant.<br>
+foo2 receives the discriminant s.kind in a hidden parameter
+so it knows which variant it is.
+
+
+
+<br><br><br>
+<p><b>Packed types</b><br><br>
+
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  packed struct PERSON
+  {
+    char[20]  name;
+    int       age;
+  }
+
+  PERSON per;
+</PRE>
+</td></tr></table>
+
+The keyword <b>packed</b> tells the compiler not to align the fields of the structure.
+Consequently the structure becomes 'portable' and can be passed through an input/output function
+to the outside world (file, network, ..).
+A packed structure cannot contain a pointer ^ (otherwise you could read a random value from
+the outside world into a pointer and corrupt memory).
+
+<br>
+There's a rule that implicitely converts all packed types into byte arrays
+when passing them as parameter.<br>
+<br>
+read() et write() being declared like this :
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  int read (int fd, out byte[] buffer);
+  int write (int fd, byte[] buffer);
+</PRE>
+</td></tr></table>
+
+
+you can thus write this :
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  rc = read (fd, out per);
+// or
+  rc = write (fd, per);
+</PRE>
+</td></tr></table>
+
+Moreover, any packed variable can be converted into a byte array using the attribute 'byte :
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  byte tab[4];
+  float f = 1.2;
+
+  tab = f'byte;   // copies 4 bytes
+</PRE>
+</td></tr></table>
+
+which allow copying the content of any variable to any other variable
+(unless the variable contains an unsafe pointer^, those being excluded from these conversions) :
+
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  int   i;
+  float f = 1.2;
+
+  i'byte      = f'byte;       // copies 4 bytes
+  i'byte[0]   = f'byte[0];    // copies the first byte
+  i'byte[2:2] = f'byte[2:2];  // copies the last 2 bytes
+</PRE>
+</td></tr></table>
+
+
+<br><br>
+<p><b>The type object</b><br><br>
+
+The type <b>object</b> is predefined as a byte array :
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+    typedef byte[] object;    // open array of byte
+</PRE>
+</td></tr></table>
+<br>
+The type <b>object</b>[] is used in the declaration of functions having a variable number of 
+parameters, like these :
+<br>
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  int sprintf (out string buffer, string format, object[] arg);
+  int sscanf  (string buffer,     string format, out object[] arg);
+</PRE>
+</td></tr></table>
+In the body of these functions, you can know the number of parameters
+by using arg'length, and each parameter is accessible through arg[i] and has type
+array of byte. Depending on the string 'format', it is then possible for the function
+to convert them to the desired type using the attribute 'byte.
+
+<br><br><br>
+<p><b>References</b><br><br>
+
+A reference allows you to rename a variable into a shorter name.<br>
+In practice, the reference always stores the variable's address, and sometimes its length for an array.<br>
+<br>
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  ref string s = p^.line[i]^;
+  printf ("%s\n", s);
+</PRE>
+</td></tr></table>
+
+<br><br>
+<p><b>Pointer types</b><br><br>
+
+A pointer is declared using the symbol ^. The keyword <b>new</b> allows you to allocate dynamic-size
+variables on the heap, with or without specifying an initial value.<br>
+<br>
+There are simple types :
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  int^  p  = new int;         // object initialized to zero
+  int^  p2 = new int ' (1);   // explicit initialization to 1.
+</PRE>
+</td></tr></table>
+
+or
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  struct NODE
+  {
+    int   nr;
+    NODE^ next;
+  }
+
+  NODE^ p  = new NODE;              // object initialized to zero
+  NODE^ p2 = new NODE ' {1, null};  // explicit initialization using aggregate
+  NODE^ p3 = new NODE ' (p^);       // initialized with value of another object
+</PRE>
+</td></tr></table>
+
+<br>
+There are two types of array objects : those with constant length (that have a constant specified in the
+pointer declaration) :
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  int[3]^  p = new int[3];           // always points to an array of length 3.
+  int[3]^  q = new int ' {1, 2, 3};  // same
+</PRE>
+</td></tr></table>
+
+and those with dynamic length (that have no length specified in the pointer declaration) :
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  int[]^  p = new int[3];
+  int[]^  q = new int ' {1, 2, 3};
+</PRE>
+</td></tr></table>
+please watch out for the difference : the last ones have a length field stored in the header of the heap object;
+they are not compatible with the first ones.<br>
+<br>
+Last, there are structure with discriminant containing the value of the discriminant in a header of the heap object:
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  Shape^  p = new Shape(POINT);
+  Shape^  q = new Shape(POINT) ' {x=>1, y=>2};
+  Shape^  r = new Shape ' (q^);
+</PRE>
+</td></tr></table>
+
+<br><br>
+<p><b>Implementation of pointer types</b><br><br>
+
+A pointer type ^ is secured by a 'tombstone' mecanism: each pointer
+points to an intern structure called Tombstone that contains the address
+of the real object allocated on the heap as well as a counter of references.
+This mecanism, handled in a thread-safe way, prevents any operation that could corrupt memory.
+
+<br><br>
+If the systeme is short on memory during a <b>new</b>
+the program will stop on a fatal error exactly as when your stack is full following too many
+recursive calls.
+It's up to you to manage your memory consumption.
+As in C, each memory block allocated with <b>new</b> must be freed
+after use with the instruction <b>free</b>.
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  free p;
+  free q;
+</PRE>
+</td></tr></table>
+
+Using <b>free</b> on an object still referenced by any thread
+or already freed earlier by <b>free</b> will cause a fatal error.<br>
+<br>
+On the other hand, the language will not notify you if you forget to call <b>free</b>,
+because that doesn't corrupt memory.
+
+<br><br><br>
+<p><b>Pointers to functions</b><br><br>
+
+Pointers to functions exist like in C, without surprise.
+Here's an example :
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  void treat_node (Shape s);     // function declaration
+
+  typedef void TREAT (Shape s);  // function pointer type
+
+  void treatment ()
+  {
+    TREAT treat;    // function pointer variable
+
+    treat = null;
+    treat = treat_node;   // parameter modes and types must match
+
+    if (treat != null)
+      treat (s);
+  }
+</PRE>
+</td></tr></table>
+
+
+<br><br>
+<p><b>Unsafe pointers</b><br><br>
+
+To interface the libraries with the operating system, the old C pointers are available in Safe-C,
+for example the operator & can be used to take an object's address,
+an unsafe pointer can be indexed as in p[i], or taken a field of as in p->field,
+also the operators ++ and -- operate on unsafe pointers.<br>
+All this is however only available in an unsafe section :
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+#begin unsafe
+  const string filename = "Test\0";
+  char *p = &filename;
+  p++;
+#end unsafe
+</PRE>
+</td></tr></table>
+
+
+<br><br>
+<p><b>Threads</b><br><br>
+
+The operator <b>run</b> allows you to start a thread very easily.
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  void my_thread ()
+  {
+  }
+
+  void main()
+  {
+    int rc;
+    rc = run my_thread ();    // starts a thread (rc: 0=OK, -1=error)
+  }
+</PRE>
+</td></tr></table>
+The function my_thread can have a maximum of one parameter.
+<br><br>
+
+<br><br>
+<p><b>Opaque types</b><br><br>
+
+Opaque types allow a very simple form of class in which the fields of a structure are only available
+in the .c file corresponding to the .h file where the opaque type is declared.
+Furthermore, all operations allowing to take a copy (clone) of the opaque type are disallowed.
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  // drawing.h
+
+  struct DRAW_CONTEXT;     // opaque type
+
+  void init   (out DRAW_CONTEXT d);
+  void circle (ref DRAW_CONTEXT d, int x, int y, int radius);
+</PRE>
+</td></tr></table>
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  // drawing.c
+
+  struct DRAW_CONTEXT      // full struct type
+  {
+    int    x, y, dx, dy;
+    IMAGE^ image;
+  }
+
+  public void init (out DRAW_CONTEXT d)
+  {
+    // ..
+  }
+
+  public void circle (ref DRAW_CONTEXT d, int x, int y, int radius)
+  {
+    // ..
+  }
+</PRE>
+</td></tr></table>
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  // main.c
+
+  use drawing;
+
+  void main()
+  {
+    DRAW_CONTEXT a, b;
+    init (out a);
+    b = a;        // ERROR : assignment not allowed for limited types
+  }
+</PRE>
+</td></tr></table>
+
+
+<br><br>
+<p><b>generic packages</b><br><br>
+
+Safe-C allows to declare generic packages so you can write algorithms that can be instantiated
+for a given type. This has the same effect as C's macros, except that the compiler
+doesn't just replace mecanically the generic by the actual type; all the package
+is syntactically checked.<br>
+<br>
+Also, non-generic packages can be declared, as well as nested packages.<br>
+<br>
+Here's an example of a bubble sort instantiated for the type int :
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  // bubble.h
+
+  generic &lt;ELEMENT>           // generic type ELEMENT
+    int compare (ELEMENT a,
+                 ELEMENT b);  // return -1 if a&lt;b, 0 if a==b, +1 if a>b
+  package BubbleSort
+    void sort (ref ELEMENT table[]);
+  end BubbleSort;
+</PRE>
+</td></tr></table>
+
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  // bubble.c
+
+  package body BubbleSort
+    public void sort (ref ELEMENT table[])
+    {
+      int     i, j;
+      ELEMENT temp;
+
+      for (i=1; i&lt;table'length; i++)
+      {
+        for (j=i; j>0; j--)
+        {
+          if (compare (table[j-1], table[j]) &lt;= 0)
+            break;
+
+          temp       = table[j-1];
+          table[j-1] = table[j];
+          table[j]   = temp;
+        }
+      }
+    }
+  end BubbleSort;
+</PRE>
+</td></tr></table>
+
+
+<table cellpadding="6" width="80%"><tr><td style="border:1px inset;">
+<PRE>
+  int compare_int (int a, int b)
+  {
+    if (a < b) return -1;
+    if (a > b) return +1;
+    return 0;
+  }
+
+  package Sort_int = new BubbleSort (ELEMENT => int,
+                                     compare => compare_int);
+
+  void main()
+  {
+    int table[5] = {2, 19, 3, 9, 4};
+
+    sort (ref table);    // must be written Sort_int.sort if ambiguous
+  }
+</PRE>
+</td></tr></table>
+
+<br><br>
+<p><b>A few more things</b><br><br>
+
+To close this chapter, here are some other short infos:<br>
+<ul>
+<li>the type <b>wchar</b> on 16-bits means Safe-C supports UTF-16 so you can write chinese or japanese characters,
+  and this works even in the source code, so you can write constants japanese strings L"".<br>
+<li>the instruction <b>assert b;</b> can be used to check an assertion during compilation or at runtime;<br>
+<li>the instruction <b>abort;</b>  stops the program on a fatal error;<br>
+<li>the instruction <b>sleep n;</b>  allows to suspend a thread during some specified time. sleep takes an argument of type int or float in seconds.<br>
+<li>the instruction <b>_unused v;</b>  allows to specify that a variable is unused, to avoid a compiler warning;<br>
+<li>in case of a fatal error, using the library unit <b>'exception'</b> allows you to generate a file called
+  <b>CRASH-REPORT.TXT</b> that allows the programmer to locate the error.<br>
+</ul>
+<hr>
+<br>
+That's it, you know now the most important parts of the Safe-C programming language !<br>
+<br>
+All the rest (operators, instructions) should be familiar to you if you already know C.<br>
+<br>
+
+<hr>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-78561717-1', 'auto');
+  ga('send', 'pageview');
+</script>

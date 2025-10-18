@@ -1,0 +1,1 @@
+BOOT\mk mk cfg=default.cfg
