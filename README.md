@@ -85,10 +85,10 @@ To compile Safe-C programs
 
   2) copy in it :
 
-     mk.exe  (the compiler, it's in the folder "/compiler"
-     std.lib (the standard library, see folder "lib" above how to make it)
+   . mk.exe  (the compiler, it's in the folder "/compiler"
+   . std.lib (the standard library, see folder "lib" above how to make it)
 
-     p.c   (your test program)
+   . p.c   (your test program)
 
             // p.c
             from std use console;
@@ -97,7 +97,7 @@ To compile Safe-C programs
               printf ("Hello World !\n");
             }
 
-    c.bat  (a little batch)
+   . c.bat  (a little batch)
 
         # compilation batch
         mk p
